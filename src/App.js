@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.less';
-import { Button } from 'antd';
+import {
+  // BrowserRouter as Router,
+  HashRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import Sign from './Sign';
 
-const App = () => (
-  <div className="App">
-    <Button type="primary">Button</Button>
-  </div>
-);
+
+const App = () => {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/sign">
+          <Sign />
+        </Route>
+
+        <Redirect to="/sign" />
+      </Switch>
+    </Router>
+  )
+}
 
 export default App;
