@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Select, Button, Result } from 'antd';
 import { useHistory } from "react-router-dom";
-// import { useHistory } from "react-router-dom";
 // import axiosInst from '../initAxios.js'
 
 

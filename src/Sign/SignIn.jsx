@@ -2,25 +2,21 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 // import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-// import axiosInst from '../initAxios.js'
+import axiosInst from '../initAxios.js'
 
 const SignIn = () => {
 
   // let history = useHistory();
 
   const onFinish = (values) => {
-    // axiosInst
-    //   .post("/users/signin", {
-    //     "mobile": values.username,
-    //     "password": values.password
-    //   })
-    //   .then((res) => {
-    //     if(res.token){
-    //       // 使用本地存储方案存储服务器返回的 token 
-    //       localStorage.setItem("token", "Bearer " + res.token); 
-    //     }
-    //     history.push("/todolist");
-    //   })
+    axiosInst
+      .post("/sign/in", {
+        "mobile": values.username,
+        "password": values.password
+      })
+      .then((res) => {
+        console.log(res);
+      })
     // console.log('Received values of form: ', values);
   };
 
