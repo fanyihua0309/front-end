@@ -9,13 +9,17 @@ const Sign = () => {
   return (
     <Switch>
       <Route path={`${path}/in`}>
-        {/* <SignIn /> */}
-        <Layout formLable="登 录 账 户" render={<SignIn />} />
+        <Layout>
+          <h2>登 录 账 户</h2>
+          <SignIn />
+        </Layout>
       </Route>
 
       <Route path={`${path}/up`}>
-        {/* <SignUp /> */}
-        <Layout formLable="注 册 账 户" render={<SignUp />} />
+        <Layout>
+          <h2>注 册 账 户</h2>
+          <SignUp />
+        </Layout>
       </Route>
 
       <Redirect to={`${path}/in`}/>
