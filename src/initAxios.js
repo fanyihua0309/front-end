@@ -1,5 +1,5 @@
+import { message } from "antd";
 import axios from "axios"
-// import { message } from 'antd';
 // import { createHashHistory } from 'history';
 
 const axiosInst = axios.create({
@@ -31,6 +31,11 @@ axiosInst.interceptors.response.use(
     //   return Promise.reject(errors);
     // }
     // return data;
+    const { code, err } = response.data;
+    if(code !== 0) {
+      message.info(err);
+      return Promise.reject(err);
+    }
     console.log(response);
   },
   function (error) {

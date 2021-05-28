@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Select, Button, Result } from 'antd';
 import { useHistory } from "react-router-dom";
-// import axiosInst from '../initAxios.js'
+import axiosInst from '../initAxios.js'
 
 
 const { Option } = Select;
@@ -38,25 +38,21 @@ const tailFormItemLayout = {
 };
 
 const SignUp = () => {
-  const [result, setresult] = useState(false);
+  const [state, setstate] = useState("signup");    
   const [form] = Form.useForm();
 
-  let history = useHistory();
-
   const onFinish = (values) => {
-    // axiosInst
-    //   .post("/users/signup", {
-    //     name: values.nickname,
-    //     email: values.email,
-    //     mobile: values.phone,
-    //     password: values.password
-    //   })
-    //   .then(() => {
-    //     history.push("/sign/up/result");
-    //   })
+    axiosInst
+      .post("/sign/up", {
+        nickname: values.nickname,
+        mobile: values.phone,
+        password: values.password
+      })
+      .then(() => {
+        setstate("success");
+      })
     
     // console.log('Received values of form: ', values);
-    setresult(true);
   };
 
   const prefixSelector = (
@@ -72,6 +68,7 @@ const SignUp = () => {
     </Form.Item>
   );
   
+  let history = useHistory();
 
   const handleClick = () => {
     history.push("/sign/in");
@@ -79,19 +76,7 @@ const SignUp = () => {
 
 
   return (
-    result ? 
-    (
-      <Result
-        status="success"
-        title="注册成功!"
-        extra={[
-          <Button type="primary" key="console" onClick={handleClick}>
-            返回登录
-          </Button>
-        ]}
-      />
-    )
-    :
+    (state === "signup") ?
     (    
       <Form
         {...formItemLayout}
@@ -124,7 +109,7 @@ const SignUp = () => {
         <Form.Item
           name="phone"
           label="手机号码"
-          tooltip="每个手机号码只能注册一个账户"
+          tooltip="手机号码作为用户名登陆时使用"
           rules={[
             {
               required: true,
@@ -192,8 +177,20 @@ const SignUp = () => {
           </Button>
         </Form.Item>
       </Form>
-    )
-  );
+  )
+  :
+  (
+    <Result
+      status="success"
+      title="注册成功!"
+      extra={[
+        <Button type="primary" key="console" onClick={handleClick}>
+          返回登录
+        </Button>
+      ]}
+    />
+  )
+  )
 };
 
 export default SignUp;
