@@ -5,6 +5,7 @@ import axios from "axios"
 const axiosInst = axios.create({
   baseURL: "http://localhost:4000",
   timeout: 10000,
+  // dataType:'text',
 });
 
 // axiosInst.interceptors.request.use(
@@ -31,12 +32,13 @@ axiosInst.interceptors.response.use(
     //   return Promise.reject(errors);
     // }
     // return data;
-    const { code, err } = response.data;
+    const { code, err, data } = response.data;
     if(code !== 0) {
       message.info(err);
       return Promise.reject(err);
     }
-    console.log(response);
+    // console.log("data: " + data);
+    return data;
   },
   function (error) {
     // if (error.response) {
@@ -51,6 +53,7 @@ axiosInst.interceptors.response.use(
     // } 
 
     // MyHistory.push("/login");
+    console.log("error: " + error);
     return Promise.reject(error);
   }
 );

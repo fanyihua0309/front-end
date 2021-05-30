@@ -2,7 +2,7 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 // import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import axiosInst from '../initAxios.js'
+import axiosInst from '../initAxios.js';
 
 const SignIn = () => {
 
