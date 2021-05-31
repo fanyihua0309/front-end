@@ -64,7 +64,7 @@ const SearchForm = () => {
           >
             Clear
           </Button>
-          <a
+          {/* <a
             style={{
               fontSize: 12,
             }}
@@ -73,7 +73,7 @@ const SearchForm = () => {
             }}
           >
             {expand ? <UpOutlined /> : <DownOutlined />} Collapse
-          </a>
+          </a> */}
         </Col>
       </Row>
     </Form>

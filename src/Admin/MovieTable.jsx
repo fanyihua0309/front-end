@@ -4,13 +4,14 @@ import React, { useEffect, useState } from 'react';
 import EditModal from './EditModal.jsx';
 
 
-const MovieTable = () => {
+const MovieTable = ({ operation }) => {
   const [movies, setmovies] = useState([]);
 
   const requestMoviesInfo = () => {
     axiosInst
       .get("/movies")
       .then((res) => {
+        console.log(res);
         let moviesList = res;
         moviesList = moviesList.map((curMovie) => {
           // 处理 date 类型，截取前10位
@@ -30,6 +31,16 @@ const MovieTable = () => {
   const handleDelete = (id) => {
     axiosInst
       .delete(`/movies/delete/${id}`)
+      .then(() => {
+        requestMoviesInfo();
+      })
+  }
+
+  const handleEdit = (movie) => {
+    console.log(movie);
+    const params = JSON.stringify(movie);
+    axiosInst
+      .patch("/movies/edit", { params })
       .then(() => {
         requestMoviesInfo();
       })
@@ -90,19 +101,35 @@ const MovieTable = () => {
           {/* <a>Invite {record.name}</a>
           <a>Delete</a> */}
           {/* <Button type="primary">编辑</Button> */}
-          <EditModal />
-          <Button type="primary" onClick={() => handleDelete(record.id)}>删除</Button>
+          <EditModal originalMovie={record} isButtonVisible={(operation === "edit") ? true : false} onClickSubmit={handleEdit}/>
+          <Button 
+            type="primary" 
+            onClick={() => handleDelete(record.id)} 
+            style={{display: (operation === "delete") ? "inherit" : "none"}}
+          >
+            删除
+          </Button>
         </Space>
       ),
     },
   ];
   
+  /**
+   * 当传入的 operation 为 null 时不显示操作那一栏
+   * @returns 表格的列组成的对象数组
+   */
+  const setColumns = () => {
+    if(operation === "null") {
+      columns.pop();
+    }
+    return columns;
+  }
 
   return (
     <Table 
-      columns={columns} 
+      columns={setColumns()} 
       dataSource={movies} 
-      pagination={{position: ["topLeft"], pageSize: 10, showQuickJumper: true}} 
+      pagination={{position: ["topLeft"], pageSize: 5, showQuickJumper: true}} 
       rowKey="id" 
     />
   )
