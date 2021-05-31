@@ -1,6 +1,7 @@
 import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import MovieTable from './MovieTable.jsx';
 import InputForm from "./InputForm.jsx";
+import SearchForm from './SearchForm.jsx';
 
 
 const MainContent = () => {
@@ -16,7 +17,7 @@ const MainContent = () => {
         <InputForm />
       </Route>
       <Route path={`${path}/search`}>
-        <div>search</div>
+        <SearchForm />
       </Route>
       <Redirect to={`${path}/movies`}/>
     </Switch>
