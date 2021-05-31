@@ -2,7 +2,7 @@ import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import MovieTable from './MovieTable.jsx';
 // import InputForm from "./InputForm.jsx";
 import AddMovie from './AddMovie.jsx';
-// import SearchForm from './SearchForm.jsx';
+import SearchMovieTable from './SearchMovieTable.jsx';
 
 
 const MainContent = () => {
@@ -11,14 +11,14 @@ const MainContent = () => {
 
   return (
     <Switch>
-      <Route path={`${path}/movies`}>
+      <Route path={`${path}/show`}>
         <MovieTable operation="null"/>
       </Route>
       <Route path={`${path}/add`}>
         <AddMovie />
       </Route>
       <Route path={`${path}/search`}>
-        {/* <SearchForm /> */}
+        <SearchMovieTable />
       </Route>
       <Route path={`${path}/delete`}>
         <MovieTable operation="delete"/>
@@ -26,7 +26,7 @@ const MainContent = () => {
       <Route path={`${path}/edit`}>
         <MovieTable operation="edit"/>
       </Route>
-      <Redirect to={`${path}/movies`}/>
+      <Redirect to={`${path}/show`}/>
     </Switch>
   )
 

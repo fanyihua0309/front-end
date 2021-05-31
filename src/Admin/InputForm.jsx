@@ -6,8 +6,6 @@ import {
   DatePicker,
 } from 'antd';
 import moment from "moment";
-import 'moment/locale/zh-cn';
-import locale from 'antd/es/date-picker/locale/zh_CN';
 
 
 const InputForm = ({ originalMovie, onClickSubmit }) => {
@@ -18,11 +16,9 @@ const InputForm = ({ originalMovie, onClickSubmit }) => {
     setComponentSize(size);
   };
 
-  const [form] = Form.useForm();
-
   const onFinish = (values) => {
     console.log(values);
-    values.date = moment(new Date(form.date).getTime() + 84600000).format("YYYY-MM-DD");
+    values.date = moment(values.date).format('YYYY-MM-DD');
     onClickSubmit(values);
   };
 
@@ -55,7 +51,7 @@ const InputForm = ({ originalMovie, onClickSubmit }) => {
           <Input />
         </Form.Item>
         <Form.Item label="上映时间" name="date">
-          <DatePicker local={locale} placeholder="选择上映日期" allowClear={false}/>
+          <DatePicker placeholder="选择上映日期" allowClear={false}/>
         </Form.Item>
         <Form.Item label="国家地区" name="area">
           <Input />

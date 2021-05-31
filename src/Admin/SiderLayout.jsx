@@ -21,30 +21,26 @@ const SiderLayout = () => {
   };
 
   let history = useHistory();
-  console.log(history);
-  const handleClick = () => {
-    history.push("/add");
-  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<FileOutlined />}>
+          <Menu.Item key="1" icon={<FileOutlined />} onClick={() => {return history.push("/admin/show");}}>
             浏览
           </Menu.Item>
-          <Menu.Item key="2" icon={<PlusSquareOutlined />} onClick={handleClick}>
-            新建
+          <Menu.Item key="2" icon={<PlusSquareOutlined />} onClick={() => {return history.push("/admin/add");}}>
+            新增
           </Menu.Item>
-          <Menu.Item key="3" icon={<EditOutlined />}>
+          <Menu.Item key="3" icon={<CloseSquareOutlined />} onClick={() => {return history.push("/admin/delete");}}>
+            删除
+          </Menu.Item>
+          <Menu.Item key="4" icon={<EditOutlined />} onClick={() => {return history.push("/admin/edit");}}>
             编辑
           </Menu.Item>
-          <Menu.Item key="4" icon={<ZoomOutOutlined />}>
+          <Menu.Item key="5" icon={<ZoomOutOutlined />} onClick={() => {return history.push("/admin/search");}}>
             查询
-          </Menu.Item>
-          <Menu.Item key="5" icon={<CloseSquareOutlined />}>
-            删除
           </Menu.Item>
         </Menu>
       </Sider>

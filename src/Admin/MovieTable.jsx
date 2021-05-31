@@ -7,6 +7,9 @@ import EditModal from './EditModal.jsx';
 const MovieTable = ({ operation }) => {
   const [movies, setmovies] = useState([]);
 
+  /**
+   * get 请求获取所有电影信息
+   */
   const requestMoviesInfo = () => {
     axiosInst
       .get("/movies")
@@ -17,13 +20,18 @@ const MovieTable = ({ operation }) => {
           // 处理 date 类型，截取前10位
           curMovie.date = curMovie.date.slice(0, 10);
           // 将 type 字符串类型按空格转换为字符串数组
-          curMovie.type = curMovie.type.split(' ');   
+          curMovie.type = curMovie.type.split(' ');  
+          // 为表格的每一行设定唯一的 key，否则会有 warning
+          curMovie.key = curMovie.id;   
           return curMovie;
         })
         setmovies(moviesList);
       })
   }
 
+  /**
+   * 组件挂载后执行函数
+   */
   useEffect(() => {
     requestMoviesInfo();
   }, [])
@@ -134,5 +142,6 @@ const MovieTable = ({ operation }) => {
     />
   )
 }
+
 
 export default MovieTable;
