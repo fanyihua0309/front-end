@@ -37,7 +37,6 @@ axiosInst.interceptors.response.use(
       message.info(err);
       return Promise.reject(err);
     }
-    // console.log("data: " + data);
     return data;
   },
   function (error) {

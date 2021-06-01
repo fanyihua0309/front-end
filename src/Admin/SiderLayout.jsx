@@ -4,7 +4,7 @@ import {
   EditOutlined,
   PlusCircleOutlined,
   CloseCircleOutlined,
-  ZoomOutOutlined
+  SearchOutlined
 } from '@ant-design/icons';
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -12,7 +12,9 @@ import MainContent from './MainContent.jsx';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-
+/**
+ * 侧边栏布局组件
+ */
 const SiderLayout = () => {
   const [collapsed, setcollapsed] = useState(false);
 
@@ -39,8 +41,8 @@ const SiderLayout = () => {
           <Menu.Item key="4" icon={<EditOutlined />} onClick={() => {return history.push("/admin/edit");}}>
             编辑
           </Menu.Item>
-          <Menu.Item key="5" icon={<ZoomOutOutlined />} onClick={() => {return history.push("/admin/search");}}>
-            查询
+          <Menu.Item key="5" icon={<SearchOutlined />} onClick={() => {return history.push("/admin/search");}}>
+            搜索
           </Menu.Item>
         </Menu>
       </Sider>

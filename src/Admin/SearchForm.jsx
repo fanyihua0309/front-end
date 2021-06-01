@@ -1,9 +1,14 @@
 import React from 'react';
 import { Form, Row, Col, Input, Button } from 'antd';
+import { SearchOutlined, ClearOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
-
+/**
+ * 用于键入搜索信息的表单组件
+ * @param {回调函数} onClickSubmit 抛出用户输入的信息给父组件
+ * @param {boolean} isVisible 当前组件是否可见
+ */
 const SearchForm = ({ onClickSubmit, isVisible }) => {
   const [form] = Form.useForm();
 
@@ -16,7 +21,7 @@ const SearchForm = ({ onClickSubmit, isVisible }) => {
       children.push(
         <Col span={8} key={i}>
           <Form.Item name={formItemName[i]}>
-            <Search placeholder={searchName[i]} allowClear enterButton />
+            <Search placeholder={searchName[i]} allowClear enterButton/>
           </Form.Item>
         </Col>
       );
@@ -45,10 +50,12 @@ const SearchForm = ({ onClickSubmit, isVisible }) => {
             textAlign: 'right',
           }}
         >
-          <Button type="primary" htmlType="submit">
-            Search
+          <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
+            搜索
           </Button>
           <Button
+            htmlType="submit"
+            icon={<ClearOutlined />}
             style={{
               margin: '0 8px',
             }}
@@ -56,7 +63,7 @@ const SearchForm = ({ onClickSubmit, isVisible }) => {
               form.resetFields();
             }}
           >
-            Clear
+            重置
           </Button>
         </Col>
       </Row>

@@ -1,10 +1,16 @@
-import { Table, Tag, Space, Button } from 'antd';
+import { Table, Tag, Space, Button, message } from 'antd';
 import axiosInst from '../initAxios.js';
 import React, { useEffect, useState } from 'react';
 import EditModal from './EditModal.jsx';
 import SearchForm from './SearchForm.jsx';
+import { CloseOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 
+/**
+ * 展示电影基本信息的组件
+ * @param {string} operation 显示当前组件的功能
+ * @returns 
+ */
 const MovieTable = ({ operation }) => {
   const [movies, setmovies] = useState([]);
 
@@ -36,12 +42,13 @@ const MovieTable = ({ operation }) => {
 
   /**
    * 当用户点击删除按钮时
-   * @param {number} id 待删除的电影的 id 
+   * @param {Array} idList 待删除的电影的 id 集合
    */
-  const handleDelete = (id) => {
+  const handleDelete = (idList) => {
     axiosInst
-      .delete(`/movies/delete/${id}`)
+      .delete(`/movies/delete/${idList}`)
       .then(() => {
+        message.success("删除电影信息成功！");
         requestMoviesInfo();
       })
   }
@@ -56,6 +63,7 @@ const MovieTable = ({ operation }) => {
     axiosInst
       .patch("/movies/edit", { params })
       .then(() => {
+        message.success("编辑电影信息成功！");
         requestMoviesInfo();
       })
   }
@@ -70,7 +78,6 @@ const MovieTable = ({ operation }) => {
       .post("/movies/search", { params })
       .then((res) => {
         res = res.map((curMovie) => {
-          // curMovie.show = true;
           curMovie.type = curMovie.type.split(' '); 
           curMovie.key = curMovie.id;   
           return curMovie;
@@ -84,7 +91,6 @@ const MovieTable = ({ operation }) => {
       title: '电影名称',
       dataIndex: 'name',
       key: 'name',
-      // render: text => <a>{text}</a>,
     },
     {
       title: '上映日期',
@@ -131,45 +137,108 @@ const MovieTable = ({ operation }) => {
       key: 'operation',
       render: (text, record) => (
         <Space size="middle">
-          {/* <a>Invite {record.name}</a>
-          <a>Delete</a> */}
-          {/* <Button type="primary">编辑</Button> */}
           <EditModal originalMovie={record} isButtonVisible={(operation === "edit") ? true : false} onClickSubmit={handleEdit}/>
           <Button 
             type="primary" 
-            onClick={() => handleDelete(record.id)} 
+            onClick={() => handleDelete([record.id])} 
             style={{display: (operation === "delete") ? "inherit" : "none"}}
-          >
-            删除
-          </Button>
+            shape="circle"
+            danger
+            ghost
+            icon={<CloseOutlined />}
+            size="small"
+          />
         </Space>
       ),
     },
   ];
   
   /**
-   * 当传入的 operation 为 null 时不显示操作那一栏
+   * 当传入的 operation 为 null 或 search 时不显示操作那一栏
    * @returns 表格的列组成的对象数组
    */
   const setColumns = () => {
-    if(operation === "null") {
+    if(operation === "null" || operation === "search") {
       columns.pop();
     }
     return columns;
   }
 
+  const [isButtonDisabled, setisButtonDisabled] = useState(true);   // 是否禁用批量删除按钮
+  const [selectedRowKeys, setselectedRowKeys] = useState([]);
+
+  const onSelectChange = (selectedRowKeys) => {
+    // console.log('selectedRowKeys changed: ', selectedRowKeys);
+    setselectedRowKeys(selectedRowKeys);
+
+    // 当没有任何行被选中时，禁用批量删除按钮
+    if(selectedRowKeys.length > 0) {
+      setisButtonDisabled(false);
+    }
+    else {
+      setisButtonDisabled(true);
+    }
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    selections: [
+      Table.SELECTION_ALL,
+      Table.SELECTION_NONE,
+    ]
+  };
+
+
+  // 删除功能显示表格多选行功能，其余不显示
   return (
-    <>
-    <SearchForm onClickSubmit={handleSearch} isVisible={(operation === "search") ? true: false}/>
-    <Table 
-      columns={setColumns()} 
-      dataSource={movies} 
-      pagination={{position: ["topLeft"], pageSize: 5, showQuickJumper: true}} 
-      rowKey="id" 
-    />
-    </>
+    (operation === "delete") ?
+    (
+      <>
+        <Button 
+          type="primary" 
+          icon={<CloseCircleOutlined />} 
+          danger
+          shape="round"
+          style={{display: (operation === "delete") ? "inherit": "none"}}
+          disabled={isButtonDisabled}
+          onClick={() => handleDelete(selectedRowKeys)}
+        >
+          批量删除
+        </Button>
+        <Table 
+          rowSelection={rowSelection}
+          rowKey={record => record.id}
+          columns={setColumns()} 
+          dataSource={movies} 
+          pagination={{position: ["topLeft"], pageSize: 5, showQuickJumper: true}}  
+        />
+      </>
+    )
+    :
+    (
+      <>
+        <SearchForm onClickSubmit={handleSearch} isVisible={(operation === "search") ? true: false}/>
+        <Button 
+          type="primary" 
+          icon={<CloseCircleOutlined />} 
+          danger
+          style={{display: (operation === "delete") ? "inherit": "none"}}
+          onClick={() => handleDelete(selectedRowKeys)}
+        >
+          批量删除
+        </Button>
+        <Table 
+          rowKey={record => record.id}
+          columns={setColumns()} 
+          dataSource={movies} 
+          pagination={{position: ["topLeft"], pageSize: 5, showQuickJumper: true}}  
+        />
+      </>
+    )
   )
+
+
 }
-
-
+  
 export default MovieTable;

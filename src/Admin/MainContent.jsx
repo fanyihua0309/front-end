@@ -3,6 +3,9 @@ import AddMovie from './AddMovie.jsx';
 import MovieTable from './MovieTable.jsx';
 
 
+/**
+ * 侧边栏布局的 Content 部分子组件
+ */
 const MainContent = () => {
 
   let { path } = useRouteMatch();
