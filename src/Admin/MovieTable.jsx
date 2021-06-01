@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import EditModal from './EditModal.jsx';
 import SearchForm from './SearchForm.jsx';
 import { CloseOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { useRouteMatch } from "react-router-dom";
 
 
 /**
@@ -13,6 +14,8 @@ import { CloseOutlined, CloseCircleOutlined } from '@ant-design/icons';
  */
 const MovieTable = ({ operation }) => {
   const [movies, setmovies] = useState([]);
+
+  let { path } = useRouteMatch();
 
   /**
    * get 请求获取所有电影信息
@@ -34,11 +37,11 @@ const MovieTable = ({ operation }) => {
   }
 
   /**
-   * 组件挂载后执行函数
+   * url 变化时重新请求获取所有的电影信息
    */
   useEffect(() => {
     requestMoviesInfo();
-  }, [])
+  }, [path])
 
   /**
    * 当用户点击删除按钮时
@@ -58,7 +61,6 @@ const MovieTable = ({ operation }) => {
    * @param {object} movie 子组件抛出的存储当前用户键入的编辑之后的信息的对象
    */
   const handleEdit = (movie) => {
-    console.log(movie);
     const params = JSON.stringify(movie);
     axiosInst
       .patch("/movies/edit", { params })
@@ -211,7 +213,15 @@ const MovieTable = ({ operation }) => {
           rowKey={record => record.id}
           columns={setColumns()} 
           dataSource={movies} 
-          pagination={{position: ["topLeft"], pageSize: 5, showQuickJumper: true}}  
+          pagination={{
+            position: ["topLeft"], 
+            showSizeChanger: true, 
+            defaultPageSize: 5, 
+            pageSizeOptions: [5, 10, 20, 50, 100], 
+            total: `${movies.length}`,
+            showTotal: ((total) => `Total ${total} Items`),
+            showQuickJumper: true
+          }} 
         />
       </>
     )
@@ -232,7 +242,15 @@ const MovieTable = ({ operation }) => {
           rowKey={record => record.id}
           columns={setColumns()} 
           dataSource={movies} 
-          pagination={{position: ["topLeft"], pageSize: 5, showQuickJumper: true}}  
+          pagination={{
+            position: ["topLeft"], 
+            showSizeChanger: true, 
+            defaultPageSize: 5, 
+            pageSizeOptions: [5, 10, 20, 50, 100], 
+            total: `${movies.length}`,
+            showTotal: ((total) => `Total ${total} Items`),
+            showQuickJumper: true
+          }}  
         />
       </>
     )

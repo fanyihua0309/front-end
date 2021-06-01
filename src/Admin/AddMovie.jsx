@@ -17,7 +17,6 @@ const AddMovie = () => {
    * 当用户点击确认提交按钮时
    */
   const handleClick = (movie) => {
-    console.log(movie);
     const params = JSON.stringify(movie);
     axiosInst
       .post("/movies/add", { params })
