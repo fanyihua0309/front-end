@@ -1,9 +1,9 @@
 import { Layout, Menu } from 'antd';
 import {
-  FileOutlined,
+  EyeOutlined,
   EditOutlined,
-  PlusSquareOutlined,
-  CloseSquareOutlined,
+  PlusCircleOutlined,
+  CloseCircleOutlined,
   ZoomOutOutlined
 } from '@ant-design/icons';
 import React, { useState } from "react";
@@ -27,13 +27,13 @@ const SiderLayout = () => {
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<FileOutlined />} onClick={() => {return history.push("/admin/show");}}>
+          <Menu.Item key="1" icon={<EyeOutlined />} onClick={() => {return history.push("/admin/show");}}>
             浏览
           </Menu.Item>
-          <Menu.Item key="2" icon={<PlusSquareOutlined />} onClick={() => {return history.push("/admin/add");}}>
+          <Menu.Item key="2" icon={<PlusCircleOutlined />} onClick={() => {return history.push("/admin/add");}}>
             新增
           </Menu.Item>
-          <Menu.Item key="3" icon={<CloseSquareOutlined />} onClick={() => {return history.push("/admin/delete");}}>
+          <Menu.Item key="3" icon={<CloseCircleOutlined />} onClick={() => {return history.push("/admin/delete");}}>
             删除
           </Menu.Item>
           <Menu.Item key="4" icon={<EditOutlined />} onClick={() => {return history.push("/admin/edit");}}>

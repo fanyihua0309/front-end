@@ -2,6 +2,7 @@ import { Table, Tag, Space, Button } from 'antd';
 import axiosInst from '../initAxios.js';
 import React, { useEffect, useState } from 'react';
 import EditModal from './EditModal.jsx';
+import SearchForm from './SearchForm.jsx';
 
 
 const MovieTable = ({ operation }) => {
@@ -14,11 +15,8 @@ const MovieTable = ({ operation }) => {
     axiosInst
       .get("/movies")
       .then((res) => {
-        console.log(res);
         let moviesList = res;
         moviesList = moviesList.map((curMovie) => {
-          // 处理 date 类型，截取前10位
-          curMovie.date = curMovie.date.slice(0, 10);
           // 将 type 字符串类型按空格转换为字符串数组
           curMovie.type = curMovie.type.split(' ');  
           // 为表格的每一行设定唯一的 key，否则会有 warning
@@ -36,6 +34,10 @@ const MovieTable = ({ operation }) => {
     requestMoviesInfo();
   }, [])
 
+  /**
+   * 当用户点击删除按钮时
+   * @param {number} id 待删除的电影的 id 
+   */
   const handleDelete = (id) => {
     axiosInst
       .delete(`/movies/delete/${id}`)
@@ -44,6 +46,10 @@ const MovieTable = ({ operation }) => {
       })
   }
 
+  /**
+   * 当用户点击编辑按钮时
+   * @param {object} movie 子组件抛出的存储当前用户键入的编辑之后的信息的对象
+   */
   const handleEdit = (movie) => {
     console.log(movie);
     const params = JSON.stringify(movie);
@@ -51,6 +57,25 @@ const MovieTable = ({ operation }) => {
       .patch("/movies/edit", { params })
       .then(() => {
         requestMoviesInfo();
+      })
+  }
+
+  /**
+   * 当用户点击搜索按钮时
+   * @param {object} movie 子组件抛出的存储当前用户键入的待搜索信息的对象
+   */
+  const handleSearch = (movie) => {
+    const params = JSON.stringify(movie);
+    axiosInst
+      .post("/movies/search", { params })
+      .then((res) => {
+        res = res.map((curMovie) => {
+          // curMovie.show = true;
+          curMovie.type = curMovie.type.split(' '); 
+          curMovie.key = curMovie.id;   
+          return curMovie;
+        })
+        setmovies(res);
       })
   }
 
@@ -134,12 +159,15 @@ const MovieTable = ({ operation }) => {
   }
 
   return (
+    <>
+    <SearchForm onClickSubmit={handleSearch} isVisible={(operation === "search") ? true: false}/>
     <Table 
       columns={setColumns()} 
       dataSource={movies} 
       pagination={{position: ["topLeft"], pageSize: 5, showQuickJumper: true}} 
       rowKey="id" 
     />
+    </>
   )
 }
 
