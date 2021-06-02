@@ -11,6 +11,7 @@ import {
 // import myHistory from "./initHistory.js";
 import Sign from './Sign';
 import Admin from './Admin';
+import User from './User';
 
 const App = () => {
   return (
@@ -22,6 +23,10 @@ const App = () => {
 
         <Route path="/admin">
           <Admin />
+        </Route>
+
+        <Route path="/user">
+          <User />
         </Route>
 
         <Redirect to="/sign" />

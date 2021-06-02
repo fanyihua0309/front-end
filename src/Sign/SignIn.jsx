@@ -1,12 +1,12 @@
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axiosInst from '../initAxios.js';
 
 const SignIn = () => {
 
-  // let history = useHistory();
+  let history = useHistory();
 
   const onFinish = (values) => {
     axiosInst
@@ -14,8 +14,8 @@ const SignIn = () => {
         "mobile": values.username,
         "password": values.password
       })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        history.push("/admin");
       })
     // console.log('Received values of form: ', values);
   };

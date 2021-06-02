@@ -8,12 +8,17 @@ const axiosInst = axios.create({
 
 axiosInst.interceptors.response.use(
   function (response) {
-    const { code, err, data } = response.data;
+    const { code, err, data, suc } = response.data;
     if(code !== 0) {
       message.info(err);
       return Promise.reject(err);
     }
-    return data;
+    else {
+      if(suc) {
+        message.success(suc);
+      }
+      return data;
+    }
   },
   function (error) {
     console.log(error);

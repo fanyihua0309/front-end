@@ -1,4 +1,4 @@
-import { Table, Tag, Space, Button, message } from 'antd';
+import { Table, Tag, Space, Button } from 'antd';
 import axiosInst from '../initAxios.js';
 import React, { useEffect, useState } from 'react';
 import EditModal from './EditModal.jsx';
@@ -51,7 +51,6 @@ const MovieTable = ({ operation }) => {
     axiosInst
       .delete(`/movies/delete/${idList}`)
       .then(() => {
-        message.success("删除电影信息成功！");
         requestMoviesInfo();
       })
   }
@@ -65,7 +64,6 @@ const MovieTable = ({ operation }) => {
     axiosInst
       .patch("/movies/edit", { params })
       .then(() => {
-        message.success("编辑电影信息成功！");
         requestMoviesInfo();
       })
   }

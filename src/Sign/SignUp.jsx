@@ -175,6 +175,9 @@ const SignUp = () => {
           <Button type="primary" htmlType="submit">
             注&nbsp;&nbsp;&nbsp;&nbsp;册
           </Button>
+          <Button type="primary" style={{marginLeft: "30px"}} onClick={handleClick}>
+            返&nbsp;&nbsp;&nbsp;&nbsp;回
+          </Button>
         </Form.Item>
       </Form>
   )
