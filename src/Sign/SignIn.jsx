@@ -4,20 +4,34 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axiosInst from '../initAxios.js';
 
-const SignIn = () => {
+const SignIn = ({ identity }) => {
 
   let history = useHistory();
 
   const onFinish = (values) => {
-    axiosInst
-      .post("/sign/in", {
-        "mobile": values.username,
-        "password": values.password
-      })
-      .then(() => {
-        history.push("/admin");
-      })
     // console.log('Received values of form: ', values);
+    if(identity === "admin") {
+      axiosInst
+        .post("/sign/admin", {
+          "mobile": values.username,
+          "password": values.password,
+        })
+        .then((res) => {
+          history.push("/admin");
+        })
+    }
+    else {
+      axiosInst
+        .post("/sign/in", {
+          "mobile": values.username,
+          "password": values.password,
+        })
+        .then((res) => {
+          history.push("/user");
+          // 将后端返回的 user_id 本地存储
+          localStorage.setItem("user_id", res.user_id);
+        })
+    }
   };
 
 
@@ -50,19 +64,19 @@ const SignIn = () => {
           },
         ]}
       >
-        <Input
+        <Input.Password
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
           placeholder="密码"
         />
       </Form.Item>
-      <Form.Item>
+
+      {/* 普通用户可以点击进行注册账户，管理员需要输入特殊字符验证身份 */}
+      <Form.Item style={{display: (identity === "user") ? "inherit" : "none"}}>
         <Form.Item name="remember" valuePropName="checked" noStyle>
           <Checkbox>记住我</Checkbox>
         </Form.Item>
-
         <Link to="/sign/up">还没有账号？现在注册</Link>
-
       </Form.Item>
 
       <Form.Item>

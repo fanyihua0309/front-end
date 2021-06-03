@@ -1,24 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { useRouteMatch } from "react-router-dom";
-import { Table, Tag, Space } from 'antd';
-import { Switch } from 'antd';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
-// import { CloseOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Table, Tag, Space, message } from 'antd';
 import axiosInst from '../initAxios.js';
+import { useHistory } from "react-router-dom";
+// import { Switch } from 'antd';
+import { 
+  // CloseOutlined, 
+  // CheckOutlined, 
+  // HeartOutlined, 
+  // HeartFilled,
+  // StarFilled,
+  CheckCircleTwoTone,
+  CloseCircleTwoTone,
+  HeartTwoTone
+} from '@ant-design/icons';
+
 
 
 const MovieTable = () => {
 
   const [movies, setmovies] = useState([]);
-
-  let { path } = useRouteMatch();
+  let history = useHistory();
 
   /**
    * get 请求获取所有电影信息
    */
   const requestMoviesInfo = () => {
+    const user_id = localStorage.getItem("user_id");
+
     axiosInst
-      .get("/movies")
+      .get(`/movies/${user_id}`)
       .then((res) => {
         let moviesList = res;
         moviesList = moviesList.map((curMovie) => {
@@ -29,15 +39,59 @@ const MovieTable = () => {
           return curMovie;
         })
         setmovies(moviesList);
-      })
+      });
   }
 
   /**
-   * url 变化时重新请求获取所有的电影信息
+   * 组件挂载后，执行 requestMoviesInfo 函数
    */
   useEffect(() => {
     requestMoviesInfo();
-  }, [path])
+  }, []);
+
+  /**
+   * 当用户点击喜欢/取消喜欢图标时
+   * @param {number} id 被标记的电影的 id
+   * @param {boolean} like 用户点击之前喜欢的状态
+   */
+  const handleToggleLike = (id, like) => {
+    const user_id = localStorage.getItem("user_id");
+    if(!user_id) {
+      message.info("您尚未登录，请先登录！");
+      history.push("/sign/in");
+    }
+    axiosInst
+      .post("/user/like", {
+        "user_id": user_id,
+        "movie_id": id,
+        "like": like,
+      })
+      .then(() => {
+        requestMoviesInfo();
+      }) 
+  }
+
+  /**
+   * 当用户点击看过/取消看过图标时
+   * @param {number} id 被标记的电影的 id
+   * @param {boolean} like 用户点击之前看过的状态
+   */
+  const handleToggleSee = (id, see) => {
+    const user_id = localStorage.getItem("user_id");
+    if(!user_id) {
+      message.info("您尚未登录，请先登录！");
+      history.push("/sign/in");
+    }
+    axiosInst
+      .post("/user/see", {
+        "user_id": user_id,
+        "movie_id": id,
+        "see": see,
+      })
+      .then(() => {
+        requestMoviesInfo();
+      }) 
+  }
 
   const columns = [
     {
@@ -86,28 +140,43 @@ const MovieTable = () => {
       ),
     },
     {
-      title: '看过',
+      title: 'See/Like',
       key: 'operation',
       render: (text, record) => (
         <Space size="middle">
-          <Switch
+          {/* <Switch
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
-            defaultChecked={false}
-          />
-        </Space>
-      ),
-    },
-    {
-      title: '喜欢',
-      key: 'operation',
-      render: (text, record) => (
-        <Space size="middle">
-          <Switch
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            defaultChecked={false}
-          />
+            checked={text.see}
+            onChange={() => handleToggleSee(record.id, text.see)}
+          /> */}
+          { 
+            (text.see) ?
+            (
+              <CheckCircleTwoTone 
+                twoToneColor="#52c41a" 
+                style={{fontSize: "150%"}} 
+                onClick={() => handleToggleSee(record.id, text.see)}
+              />
+            )
+            :
+            (
+              <CloseCircleTwoTone 
+                twoToneColor="lightgrey" 
+                style={{fontSize: "150%"}} 
+                onClick={() => handleToggleSee(record.id, text.see)}
+              />
+            )
+          }
+          {/* <HeartFilled 
+            style={{color: (text.like) ? "red" : "lightgrey", fontSize: "150%"}} 
+            onClick={() => handleToggleLike(record.id, text.like)}
+          />           */}
+          <HeartTwoTone 
+            twoToneColor={(text.like) ? "red" : "lightgrey"}
+            style={{fontSize: "150%"}}
+            onClick={() => handleToggleLike(record.id, text.like)}
+          />     
         </Space>
       ),
     },
@@ -115,8 +184,22 @@ const MovieTable = () => {
   
 
   return (
-    <Table columns={columns} dataSource={movies} rowKey={record => record.id}/>
+    <Table 
+      columns={columns} 
+      dataSource={movies} 
+      rowKey={record => record.id}
+      pagination={{
+        position: ["topLeft"], 
+        showSizeChanger: true, 
+        defaultPageSize: 5, 
+        pageSizeOptions: [5, 10, 20, 50, 100], 
+        total: `${movies.length}`,
+        showTotal: ((total) => `Total ${total} Movies`),
+        showQuickJumper: true
+      }}  
+    />
   )
 }
+
 
 export default MovieTable;

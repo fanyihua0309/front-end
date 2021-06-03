@@ -22,7 +22,7 @@ const MovieTable = ({ operation }) => {
    */
   const requestMoviesInfo = () => {
     axiosInst
-      .get("/movies")
+      .get("/admin/")
       .then((res) => {
         let moviesList = res;
         moviesList = moviesList.map((curMovie) => {
@@ -217,7 +217,7 @@ const MovieTable = ({ operation }) => {
             defaultPageSize: 5, 
             pageSizeOptions: [5, 10, 20, 50, 100], 
             total: `${movies.length}`,
-            showTotal: ((total) => `Total ${total} Items`),
+            showTotal: ((total) => `Total ${total} Movies`),
             showQuickJumper: true
           }} 
         />
@@ -246,7 +246,7 @@ const MovieTable = ({ operation }) => {
             defaultPageSize: 5, 
             pageSizeOptions: [5, 10, 20, 50, 100], 
             total: `${movies.length}`,
-            showTotal: ((total) => `Total ${total} Items`),
+            showTotal: ((total) => `Total ${total} Movies`),
             showQuickJumper: true
           }}  
         />
