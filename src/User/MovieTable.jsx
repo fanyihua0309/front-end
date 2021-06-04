@@ -2,15 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Table, Tag, Space, message } from 'antd';
 import axiosInst from '../initAxios.js';
 import { useHistory } from "react-router-dom";
-// import { Switch } from 'antd';
+import SearchForm from "./SearchForm";
+import RateModal from "./RateModal";
 import { 
-  // CloseOutlined, 
-  // CheckOutlined, 
-  // HeartOutlined, 
-  // HeartFilled,
-  // StarFilled,
-  CheckCircleTwoTone,
-  CloseCircleTwoTone,
   HeartTwoTone
 } from '@ant-design/icons';
 
@@ -36,6 +30,7 @@ const MovieTable = () => {
           curMovie.type = curMovie.type.split(' ');  
           // 为表格的每一行设定唯一的 key，否则会有 warning
           curMovie.key = curMovie.id;   
+          curMovie.show = true;
           return curMovie;
         })
         setmovies(moviesList);
@@ -71,27 +66,81 @@ const MovieTable = () => {
       }) 
   }
 
-  /**
-   * 当用户点击看过/取消看过图标时
-   * @param {number} id 被标记的电影的 id
-   * @param {boolean} like 用户点击之前看过的状态
+ 
+
+   /**
+   * 当用户点击搜索按钮时
+   * @param {object} movie 子组件抛出的存储当前用户键入的待搜索信息的对象
    */
-  const handleToggleSee = (id, see) => {
-    const user_id = localStorage.getItem("user_id");
+  const handleSearch = (movie) => {
+    const params = JSON.stringify(movie);
+    axiosInst
+      .post("/movies/search", { params })
+      .then((res) => {
+        let moviesCopy = Array.from(movies);
+        moviesCopy = moviesCopy.map((curMovie) => {
+          curMovie.show = false;
+          for(let i = 0; i < res.length; i++) {
+            if(curMovie.id === res[i].id) {
+              curMovie.show = true;
+            }
+          }
+          return curMovie;
+        })
+        setmovies(moviesCopy);
+    })
+  }
+
+  /**
+   * 当点击重置按钮时
+   */
+  const handleClear = () => {
+    let moviesCopy = Array.from(movies);
+    moviesCopy = moviesCopy.map((curMovie) => {
+      curMovie.show = true;
+      return curMovie;
+    })
+    setmovies(moviesCopy);
+  }
+
+  /**
+   * 当用户点击评分对话框的确定按钮时
+   * @param {boolean} isEdit 此次点击按钮是否是编辑之后的点击
+   * @param {number} id 电影 id
+   * @param {boolean} see 电影是否看过的状态
+   * @param {number} rate 电影评分
+   */
+  const handleSeeAndRate = (isEdit, id, see, rate) => {
+    const user_id = Number(localStorage.getItem("user_id"));
     if(!user_id) {
       message.info("您尚未登录，请先登录！");
       history.push("/sign/in");
     }
-    axiosInst
-      .post("/user/see", {
-        "user_id": user_id,
-        "movie_id": id,
-        "see": see,
-      })
-      .then(() => {
-        requestMoviesInfo();
-      }) 
-  }
+    if(isEdit) {
+      axiosInst
+        .patch("/user/see/rate", {
+          user_id: user_id,
+          movie_id: id,
+          rate: rate
+        })
+        .then(() => {
+          requestMoviesInfo();
+        }) 
+    }
+    else {
+      axiosInst
+        .post("/user/see", {
+          "user_id": user_id,
+          "movie_id": id,
+          "see": see,
+          "rate": rate
+        })
+        .then(() => {
+          requestMoviesInfo();
+        }) 
+    }
+  };
+
 
   const columns = [
     {
@@ -140,64 +189,44 @@ const MovieTable = () => {
       ),
     },
     {
-      title: 'See/Like',
+      title: '标记看过(评分)/喜欢',
       key: 'operation',
       render: (text, record) => (
         <Space size="middle">
-          {/* <Switch
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            checked={text.see}
-            onChange={() => handleToggleSee(record.id, text.see)}
-          /> */}
-          { 
-            (text.see) ?
-            (
-              <CheckCircleTwoTone 
-                twoToneColor="#52c41a" 
-                style={{fontSize: "150%"}} 
-                onClick={() => handleToggleSee(record.id, text.see)}
-              />
-            )
-            :
-            (
-              <CloseCircleTwoTone 
-                twoToneColor="lightgrey" 
-                style={{fontSize: "150%"}} 
-                onClick={() => handleToggleSee(record.id, text.see)}
-              />
-            )
-          }
-          {/* <HeartFilled 
-            style={{color: (text.like) ? "red" : "lightgrey", fontSize: "150%"}} 
-            onClick={() => handleToggleLike(record.id, text.like)}
-          />           */}
+          <RateModal 
+            isSee={text.see} 
+            onClickOk={(rate, isEdit) => handleSeeAndRate(isEdit, text.id, text.see, rate)} 
+            originalRate={text.rate}
+          />
           <HeartTwoTone 
             twoToneColor={(text.like) ? "red" : "lightgrey"}
             style={{fontSize: "150%"}}
             onClick={() => handleToggleLike(record.id, text.like)}
-          />     
+          />
         </Space>
       ),
     },
   ];
-  
+
 
   return (
-    <Table 
-      columns={columns} 
-      dataSource={movies} 
-      rowKey={record => record.id}
-      pagination={{
-        position: ["topLeft"], 
-        showSizeChanger: true, 
-        defaultPageSize: 5, 
-        pageSizeOptions: [5, 10, 20, 50, 100], 
-        total: `${movies.length}`,
-        showTotal: ((total) => `Total ${total} Movies`),
-        showQuickJumper: true
-      }}  
-    />
+    <>
+      <SearchForm onClickSubmit={handleSearch} isVisible={true} onClickClear={() => handleClear()}/>
+      <Table 
+        columns={columns} 
+        dataSource={movies.filter((curMovie) => curMovie.show === true)} 
+        rowKey={record => record.id}
+        pagination={{
+          position: ["topLeft"], 
+          showSizeChanger: true, 
+          defaultPageSize: 5, 
+          pageSizeOptions: [5, 10, 20, 50, 100], 
+          total: (movies.filter((curMovie) => curMovie.show === true).length),
+          showTotal: ((total) => `Total ${total} Movies`),
+          showQuickJumper: true
+        }}  
+      />
+    </>
   )
 }
 
