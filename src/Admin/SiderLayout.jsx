@@ -4,7 +4,8 @@ import {
   EditOutlined,
   PlusCircleOutlined,
   CloseCircleOutlined,
-  SearchOutlined
+  SearchOutlined,
+  StockOutlined
 } from '@ant-design/icons';
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -43,6 +44,9 @@ const SiderLayout = () => {
           </Menu.Item>
           <Menu.Item key="5" icon={<SearchOutlined />} onClick={() => {return history.push("/admin/search");}}>
             搜索
+          </Menu.Item>
+          <Menu.Item key="6" icon={<StockOutlined />} onClick={() => {return history.push("/admin/sort");}}>
+            排序
           </Menu.Item>
         </Menu>
       </Sider>

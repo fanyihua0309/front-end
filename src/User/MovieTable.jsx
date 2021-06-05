@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Space, message } from 'antd';
+import { Table, Tag, Space, message, Rate, Statistic } from 'antd';
 import axiosInst from '../initAxios.js';
 import { useHistory } from "react-router-dom";
 import SearchForm from "./SearchForm";
 import RateModal from "./RateModal";
 import { 
-  HeartTwoTone
+  HeartTwoTone,
+  CheckCircleTwoTone,
 } from '@ant-design/icons';
 
 
@@ -189,7 +190,34 @@ const MovieTable = () => {
       ),
     },
     {
-      title: '标记看过(评分)/喜欢',
+      title: '看过',
+      key: 'seeTotal',
+      dataIndex: 'seeTotal',
+      render: text => (
+        <Statistic value={text} prefix={<CheckCircleTwoTone twoToneColor="#52c41a" />} style={{zoom: "60%"}}/>
+      )
+    },
+    {
+      title: '评分',
+      key: 'rateAvg',
+      dataIndex: 'rateAvg',
+      render: (text, record) => (
+        (record.seeTotal) ?
+        (<Rate value={text} disabled allowHalf style={{zoom: "65%"}}/>)
+        :
+        (<span>暂无数据</span>)
+      )
+    },
+    {
+      title: '喜欢',
+      key: 'likeTotal',
+      dataIndex: 'likeTotal',
+      render: text => (
+        <Statistic value={text} prefix={<HeartTwoTone twoToneColor="red"/>} style={{zoom: "60%"}}/>
+      )
+    },
+    {
+      title: '标记',
       key: 'operation',
       render: (text, record) => (
         <Space size="middle">

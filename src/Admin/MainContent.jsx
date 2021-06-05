@@ -27,6 +27,9 @@ const MainContent = () => {
       <Route path={`${path}/edit`}>
         <MovieTable operation="edit"/>
       </Route>
+      <Route path={`${path}/sort`}>
+        <MovieTable operation="sort"/>
+      </Route>
       <Redirect to={`${path}/show`}/>
     </Switch>
   )

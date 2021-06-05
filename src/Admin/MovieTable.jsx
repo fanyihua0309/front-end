@@ -1,9 +1,9 @@
-import { Table, Tag, Space, Button } from 'antd';
+import { Table, Tag, Space, Button, Rate, Statistic } from 'antd';
 import axiosInst from '../initAxios.js';
 import React, { useEffect, useState } from 'react';
 import EditModal from './EditModal.jsx';
 import SearchForm from './SearchForm.jsx';
-import { CloseOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { CloseOutlined, CloseCircleOutlined, CheckCircleTwoTone, HeartTwoTone, } from '@ant-design/icons';
 import { useRouteMatch } from "react-router-dom";
 
 
@@ -133,6 +133,33 @@ const MovieTable = ({ operation }) => {
       ),
     },
     {
+      title: '看过',
+      key: 'seeTotal',
+      dataIndex: 'seeTotal',
+      render: text => (
+        <Statistic value={text} prefix={<CheckCircleTwoTone twoToneColor="#52c41a" />} style={{zoom: "60%"}}/>
+      )
+    },
+    {
+      title: '评分',
+      key: 'rateAvg',
+      dataIndex: 'rateAvg',
+      render: (text, record) => (
+        (record.seeTotal) ?
+        (<Rate value={text} disabled allowHalf style={{zoom: "65%"}}/>)
+        :
+        (<span>暂无数据</span>)
+      )
+    },
+    {
+      title: '喜欢',
+      key: 'likeTotal',
+      dataIndex: 'likeTotal',
+      render: text => (
+        <Statistic value={text} prefix={<HeartTwoTone twoToneColor="red"/>} style={{zoom: "60%"}}/>
+      )
+    },
+    {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -158,7 +185,7 @@ const MovieTable = ({ operation }) => {
    * @returns 表格的列组成的对象数组
    */
   const setColumns = () => {
-    if(operation === "null" || operation === "search") {
+    if(operation === "null" || operation === "search" || operation === "sort") {
       columns.pop();
     }
     return columns;
