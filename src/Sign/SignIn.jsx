@@ -28,7 +28,9 @@ const SignIn = ({ identity }) => {
         })
         .then((res) => {
           // 将后端返回的 user_id 本地存储
+          console.log(res);
           localStorage.setItem("user_id", res.user_id);
+          localStorage.setItem("user_nickname", res.user_nickname);
           history.push("/user");
         })
     }

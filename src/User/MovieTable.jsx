@@ -243,7 +243,7 @@ const MovieTable = ({ operation }) => {
   const handleSortAsc = () => {
     const user_id = Number(localStorage.getItem("user_id"));
     axiosInst
-      .post("/user/sort", {
+      .post("/movies/sort", {
         user_id: user_id,
         orderName: selectedValue,
         type: "ASC"
@@ -261,7 +261,7 @@ const MovieTable = ({ operation }) => {
   const handleSortDesc = () => {
     const user_id = Number(localStorage.getItem("user_id"));
     axiosInst
-      .post("/admin/sort", {
+      .post("/movies/sort", {
         user_id: user_id,
         orderName: selectedValue,
         type: "DESC"

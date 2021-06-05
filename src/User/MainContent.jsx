@@ -1,6 +1,7 @@
 import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import MovieTable from './MovieTable.jsx';
-import InfoCard from "./InfoCard";
+// import InfoCard from "./InfoCard";
+import MarkHistory from "./MarkHistory";
 
 /**
  * 上中下布局的 Content 部分子组件
@@ -21,17 +22,9 @@ const MainContent = () => {
         <MovieTable operation="sort"/>
       </Route>
       <Route path={`${path}/personal`}>
-        <InfoCard />
+        {/* <InfoCard /> */}
+        <MarkHistory />
       </Route>
-      {/* <Route exact path={`${path}/personal/info`}>
-        <div>info</div>
-      </Route>
-      <Route exact path={`${path}/personal/history`}>
-        <div>history</div>
-      </Route> */}
-      {/* <Route path={`${path}/aboutme`}>
-        <div>456</div>
-      </Route> */}
       <Redirect to={`${path}/home`}/>
     </Switch>
   )

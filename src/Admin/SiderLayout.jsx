@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import MainContent from './MainContent.jsx';
+import "../App.less";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -29,6 +30,7 @@ const SiderLayout = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="logo" />
+        <div><h1>电影信息管理系统</h1></div>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<EyeOutlined />} onClick={() => {return history.push("/admin/show");}}>
             浏览
