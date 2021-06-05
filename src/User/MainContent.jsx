@@ -12,7 +12,13 @@ const MainContent = () => {
   return (
     <Switch>
       <Route path={`${path}/home`}>
-        <MovieTable />
+        <MovieTable operation="null"/>
+      </Route>
+      <Route path={`${path}/search`}>
+        <MovieTable operation="search"/>
+      </Route>
+      <Route path={`${path}/sort`}>
+        <MovieTable operation="sort"/>
       </Route>
       <Route path={`${path}/personal`}>
         <InfoCard />

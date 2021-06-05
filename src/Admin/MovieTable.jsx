@@ -1,10 +1,13 @@
-import { Table, Tag, Space, Button, Rate, Statistic } from 'antd';
+import { Table, Tag, Space, Button, Rate, Statistic, Select } from 'antd';
 import axiosInst from '../initAxios.js';
 import React, { useEffect, useState } from 'react';
 import EditModal from './EditModal.jsx';
 import SearchForm from './SearchForm.jsx';
-import { CloseOutlined, CloseCircleOutlined, CheckCircleTwoTone, HeartTwoTone, } from '@ant-design/icons';
+import { CloseOutlined, CloseCircleOutlined, CheckCircleTwoTone, HeartTwoTone, FallOutlined, RiseOutlined, ClearOutlined } from '@ant-design/icons';
 import { useRouteMatch } from "react-router-dom";
+import '../App.less';
+
+const { Option } = Select;
 
 
 /**
@@ -22,7 +25,7 @@ const MovieTable = ({ operation }) => {
    */
   const requestMoviesInfo = () => {
     axiosInst
-      .get("/admin/")
+      .get("/admin")
       .then((res) => {
         let moviesList = res;
         moviesList = moviesList.map((curMovie) => {
@@ -138,7 +141,7 @@ const MovieTable = ({ operation }) => {
       dataIndex: 'seeTotal',
       render: text => (
         <Statistic value={text} prefix={<CheckCircleTwoTone twoToneColor="#52c41a" />} style={{zoom: "60%"}}/>
-      )
+      ),
     },
     {
       title: '评分',
@@ -146,7 +149,7 @@ const MovieTable = ({ operation }) => {
       dataIndex: 'rateAvg',
       render: (text, record) => (
         (record.seeTotal) ?
-        (<Rate value={text} disabled allowHalf style={{zoom: "65%"}}/>)
+        (<Rate value={text} disabled allowHalf style={{zoom: "60%"}}/>)
         :
         (<span>暂无数据</span>)
       )
@@ -216,72 +219,93 @@ const MovieTable = ({ operation }) => {
     ]
   };
 
+  const [selectedValue, setselectedValue] = useState("");
+  const handleClearSelect = () => {
+    setselectedValue("");
+    requestMoviesInfo();
+  }
 
-  // 删除功能显示表格多选行功能，其余不显示
+  const handleSortAsc = () => {
+    axiosInst
+      .post("/admin/sort", {
+        orderName: selectedValue,
+        type: "ASC"
+      })
+      .then((res) => {
+        res = res.map((curMovie) => {
+          curMovie.type = curMovie.type.split(' '); 
+          curMovie.key = curMovie.id;   
+          return curMovie;
+        })
+        setmovies(res);
+      })
+  }
+
+  const handleSortDesc = () => {
+    axiosInst
+      .post("/admin/sort", {
+        orderName: selectedValue,
+        type: "DESC"
+      })
+      .then((res) => {
+        res = res.map((curMovie) => {
+          curMovie.type = curMovie.type.split(' '); 
+          curMovie.key = curMovie.id;   
+          return curMovie;
+        })
+        setmovies(res);
+      })
+  }
+
+
   return (
-    (operation === "delete") ?
-    (
-      <>
-        <Button 
-          type="primary" 
-          icon={<CloseCircleOutlined />} 
-          danger
-          shape="round"
-          style={{display: (operation === "delete") ? "inherit": "none"}}
-          disabled={isButtonDisabled}
-          onClick={() => handleDelete(selectedRowKeys)}
-        >
-          批量删除
-        </Button>
-        <Table 
-          rowSelection={rowSelection}
-          rowKey={record => record.id}
-          columns={setColumns()} 
-          dataSource={movies} 
-          pagination={{
-            position: ["topLeft"], 
-            showSizeChanger: true, 
-            defaultPageSize: 5, 
-            pageSizeOptions: [5, 10, 20, 50, 100], 
-            total: `${movies.length}`,
-            showTotal: ((total) => `Total ${total} Movies`),
-            showQuickJumper: true
-          }} 
-        />
-      </>
-    )
-    :
-    (
-      <>
-        <SearchForm onClickSubmit={handleSearch} isVisible={(operation === "search") ? true: false}/>
-        <Button 
-          type="primary" 
-          icon={<CloseCircleOutlined />} 
-          danger
-          style={{display: (operation === "delete") ? "inherit": "none"}}
-          onClick={() => handleDelete(selectedRowKeys)}
-        >
-          批量删除
-        </Button>
-        <Table 
-          rowKey={record => record.id}
-          columns={setColumns()} 
-          dataSource={movies} 
-          pagination={{
-            position: ["topLeft"], 
-            showSizeChanger: true, 
-            defaultPageSize: 5, 
-            pageSizeOptions: [5, 10, 20, 50, 100], 
-            total: `${movies.length}`,
-            showTotal: ((total) => `Total ${total} Movies`),
-            showQuickJumper: true
-          }}  
-        />
-      </>
-    )
+    <>
+      <div style={{display: (operation === "sort") ? "inherit": "none", marginBottom: "30px" }}>
+        <Select value={selectedValue} style={{ width: 300}} onSelect={(value) => setselectedValue(value)}>
+          <Option value="seeTotal">看过人数</Option>
+          <Option value="likeTotal">喜欢人数</Option>
+          <Option value="rateAvg">评分</Option>
+        </Select>
+        <Button type="primary" icon={<RiseOutlined />} shape="round" style={{marginLeft: "30px"}} onClick={handleSortAsc}>升序</Button>
+        <Button type="primary" icon={<FallOutlined />} shape="round" style={{marginLeft: "30px"}} onClick={handleSortDesc}>降序</Button>
+        <Button type="primary" icon={<ClearOutlined />} shape="round" ghost style={{marginLeft: "30px"}} onClick={handleClearSelect}>重置</Button>
+      </div>
+
+      <Button 
+        type="primary" 
+        icon={<CloseCircleOutlined />} 
+        danger
+        shape="round"
+        style={{display: (operation === "delete") ? "inherit": "none"}}
+        disabled={isButtonDisabled}
+        onClick={() => handleDelete(selectedRowKeys)}
+      >
+        批量删除
+      </Button>
+
+      <SearchForm onClickSubmit={handleSearch} isVisible={(operation === "search") ? true: false}/>
+
+      <h2>电影信息列表</h2>
+      <Table 
+        rowKey={record => record.id}
+        columns={setColumns()} 
+        dataSource={movies} 
+        // 删除功能显示表格多选行功能，其余不显示
+        rowSelection={(operation === "delete") ? rowSelection : ""}
+        pagination={{
+          position: ["topLeft"], 
+          showSizeChanger: true, 
+          defaultPageSize: 5, 
+          pageSizeOptions: [5, 10, 20, 50, 100], 
+          total: `${movies.length}`,
+          showTotal: ((total) => `Total ${total} Movies`),
+          showQuickJumper: true
+        }}  
+      />
+    </>
+
   )
-
-
 }
   
+
 export default MovieTable;

@@ -46,7 +46,8 @@ const SignUp = () => {
       .post("/sign/up", {
         nickname: values.nickname,
         mobile: values.phone,
-        password: values.password
+        email: values.email,
+        password: values.password,
       })
       .then(() => {
         setstate("success");
@@ -128,6 +129,23 @@ const SignUp = () => {
               width: '100%',
             }}
           />
+        </Form.Item>
+
+        <Form.Item
+          name="email"
+          label="邮箱"
+          rules={[
+            {
+              type: 'email',
+              message: '请输入正确的邮箱地址!',
+            },
+            {
+              required: true,
+              message: '请输入邮箱地址!',
+            },
+          ]}
+        >
+          <Input />
         </Form.Item>
 
         <Form.Item

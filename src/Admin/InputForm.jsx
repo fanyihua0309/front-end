@@ -4,10 +4,12 @@ import {
   Input,
   Button,
   DatePicker,
+  Select
 } from 'antd';
 import { PlusOutlined, CheckOutlined } from '@ant-design/icons';
 import moment from "moment";
 
+// const { Option } = Select;
 
 /**
  * 用户键入电影基本信息的表单组件，用于新增和编辑功能
@@ -24,9 +26,34 @@ const InputForm = ({ operation, originalMovie, onClickSubmit }) => {
   };
 
   const onFinish = (values) => {
+    console.log(values);
+    // 将数组转成字符串，以空格隔开
+    values.type = values.type.join(" ");
+    // 去除字符串前面多余的空格
+    values.type = values.type.replace(/(^\s*)/g, "");   
     values.date = moment(values.date).format('YYYY-MM-DD');
     onClickSubmit(values);
   };
+  
+  const options = [
+    { value: '剧情' }, 
+    { value: '爱情' }, 
+    { value: '喜剧' },
+    { value: '战争' }, 
+    { value: '悬疑' },
+    { value: '科幻' },
+    { value: '冒险' },
+    { value: '犯罪' },
+    { value: '动作' },
+    { value: '灾难' },
+    { value: '动画' },
+  ]
+
+  // const value = ['剧情', '爱情', '冒险'];
+  // const children = [];
+  // for (let i = 0; i < 3; i++) {
+  //   children.push(<Option key={i}>{value[i]}</Option>);
+  // }
 
   return (
     <>
@@ -46,8 +73,7 @@ const InputForm = ({ operation, originalMovie, onClickSubmit }) => {
           "area": originalMovie.area || "",
           "director": originalMovie.director || "",
           "starring": originalMovie.starring || "",
-          // 默认显示以逗号分隔每个 type 处理成以空格分隔
-          "type": (originalMovie.type) ? originalMovie.type.toString().replace(/,/g, ' ') : ""
+          "type": originalMovie.type || "",
         }}
         onValuesChange={onFormLayoutChange}
         size={componentSize}
@@ -72,8 +98,8 @@ const InputForm = ({ operation, originalMovie, onClickSubmit }) => {
         <Form.Item label="主演" name="starring" tooltip="有多位主演时以空格隔开">
           <Input />
         </Form.Item>
-        <Form.Item label="类型" name="type" tooltip="有多种类型时以空格隔开">
-          <Input />
+        <Form.Item label="类型" name="type">
+          <Select mode="tags" style={{ width: '100%' }} options={options}></Select>
         </Form.Item>
         <Form.Item>
           {/* 根据对应的功能设置按钮 */}

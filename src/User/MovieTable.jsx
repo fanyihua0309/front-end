@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Space, message, Rate, Statistic } from 'antd';
+import { Table, Tag, Space, message, Rate, Statistic, Select, Button } from 'antd';
 import axiosInst from '../initAxios.js';
 import { useHistory } from "react-router-dom";
 import SearchForm from "./SearchForm";
@@ -7,11 +7,16 @@ import RateModal from "./RateModal";
 import { 
   HeartTwoTone,
   CheckCircleTwoTone,
+  ClearOutlined,
+  FallOutlined, 
+  RiseOutlined
 } from '@ant-design/icons';
+import '../App.less'
+
+const { Option } = Select;
 
 
-
-const MovieTable = () => {
+const MovieTable = ({ operation }) => {
 
   const [movies, setmovies] = useState([]);
   let history = useHistory();
@@ -67,29 +72,22 @@ const MovieTable = () => {
       }) 
   }
 
- 
-
-   /**
+  /**
    * 当用户点击搜索按钮时
    * @param {object} movie 子组件抛出的存储当前用户键入的待搜索信息的对象
    */
-  const handleSearch = (movie) => {
+   const handleSearch = (movie) => {
     const params = JSON.stringify(movie);
     axiosInst
       .post("/movies/search", { params })
       .then((res) => {
-        let moviesCopy = Array.from(movies);
-        moviesCopy = moviesCopy.map((curMovie) => {
-          curMovie.show = false;
-          for(let i = 0; i < res.length; i++) {
-            if(curMovie.id === res[i].id) {
-              curMovie.show = true;
-            }
-          }
+        res = res.map((curMovie) => {
+          curMovie.type = curMovie.type.split(' '); 
+          curMovie.key = curMovie.id;   
           return curMovie;
         })
-        setmovies(moviesCopy);
-    })
+        setmovies(res);
+      })
   }
 
   /**
@@ -195,7 +193,7 @@ const MovieTable = () => {
       dataIndex: 'seeTotal',
       render: text => (
         <Statistic value={text} prefix={<CheckCircleTwoTone twoToneColor="#52c41a" />} style={{zoom: "60%"}}/>
-      )
+      ),
     },
     {
       title: '评分',
@@ -206,7 +204,7 @@ const MovieTable = () => {
         (<Rate value={text} disabled allowHalf style={{zoom: "65%"}}/>)
         :
         (<span>暂无数据</span>)
-      )
+      ),
     },
     {
       title: '喜欢',
@@ -214,7 +212,7 @@ const MovieTable = () => {
       dataIndex: 'likeTotal',
       render: text => (
         <Statistic value={text} prefix={<HeartTwoTone twoToneColor="red"/>} style={{zoom: "60%"}}/>
-      )
+      ),
     },
     {
       title: '标记',
@@ -236,13 +234,67 @@ const MovieTable = () => {
     },
   ];
 
+  const [selectedValue, setselectedValue] = useState("");
+  const handleClearSelect = () => {
+    setselectedValue("");
+    requestMoviesInfo();
+  }
+
+  const handleSortAsc = () => {
+    const user_id = Number(localStorage.getItem("user_id"));
+    axiosInst
+      .post("/user/sort", {
+        user_id: user_id,
+        orderName: selectedValue,
+        type: "ASC"
+      })
+      .then((res) => {
+        res = res.map((curMovie) => {
+          curMovie.type = curMovie.type.split(' '); 
+          curMovie.key = curMovie.id;   
+          return curMovie;
+        })
+        setmovies(res);
+      })
+  }
+
+  const handleSortDesc = () => {
+    const user_id = Number(localStorage.getItem("user_id"));
+    axiosInst
+      .post("/admin/sort", {
+        user_id: user_id,
+        orderName: selectedValue,
+        type: "DESC"
+      })
+      .then((res) => {
+        res = res.map((curMovie) => {
+          curMovie.type = curMovie.type.split(' '); 
+          curMovie.key = curMovie.id;   
+          return curMovie;
+        })
+        setmovies(res);
+      })
+  }
 
   return (
     <>
-      <SearchForm onClickSubmit={handleSearch} isVisible={true} onClickClear={() => handleClear()}/>
+      <SearchForm onClickSubmit={handleSearch} isVisible={operation === "search" ? true : false} onClickClear={() => handleClear()}/>
+
+      <div style={{margin: "30px", display: (operation === "sort") ? "inherit" : "none" }}>
+        <Select value={selectedValue} style={{ width: 300}} onSelect={(value) => setselectedValue(value)}>
+          <Option value="seeTotal">看过人数</Option>
+          <Option value="likeTotal">喜欢人数</Option>
+          <Option value="rateAvg">评分</Option>
+        </Select>
+        <Button type="primary" icon={<RiseOutlined />} shape="round" style={{marginLeft: "30px"}} onClick={handleSortAsc}>升序</Button>
+        <Button type="primary" icon={<FallOutlined />} shape="round" style={{marginLeft: "30px"}} onClick={handleSortDesc}>降序</Button>
+        <Button type="primary" icon={<ClearOutlined />} shape="round" ghost style={{marginLeft: "30px"}} onClick={handleClearSelect}>重置</Button>
+      </div>
+
+      <h2>电影信息列表</h2>
       <Table 
         columns={columns} 
-        dataSource={movies.filter((curMovie) => curMovie.show === true)} 
+        dataSource={movies} 
         rowKey={record => record.id}
         pagination={{
           position: ["topLeft"], 
@@ -253,6 +305,7 @@ const MovieTable = () => {
           showTotal: ((total) => `Total ${total} Movies`),
           showQuickJumper: true
         }}  
+        style={{marginTop: 20}}
       />
     </>
   )
