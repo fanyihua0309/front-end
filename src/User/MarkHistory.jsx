@@ -11,11 +11,10 @@ import {
 import "../App.less";
 
 
-const MarkHistory = () => {
+const MarkHistory = ({ show, user_nickname }) => {
 
   const [likeRecord, setlikeRecord] = useState([]);
   const [seeRecord, setseeRecord] = useState([]);
-  const [user_nickname, setuser_nickname] = useState("");
 
   const requestUserLike = () => {
     const user_id = Number(localStorage.getItem("user_id"));
@@ -38,7 +37,6 @@ const MarkHistory = () => {
   useEffect(() => {
     requestUserLike();
     requestUserSee();
-    setuser_nickname(localStorage.getItem("user_nickname"));
   }, [])
 
   const dataLike = [];
@@ -89,12 +87,12 @@ const MarkHistory = () => {
 
   return (
     <>
-      <h2 style={{marginTop: 30}}>我的标记历史记录</h2>
       <List
         className="comment-list"
-        header={`${dataLike.length} 条标记 喜欢 记录`}
+        header={`共 ${dataLike.length} 条记录`}
         itemLayout="horizontal"
         dataSource={dataLike}
+        style={{display: show === "like" ? "inherit" : "none"}}
         renderItem={item => (
           <li>
             <Comment
@@ -110,9 +108,10 @@ const MarkHistory = () => {
 
       <List
         className="comment-list"
-        header={`${dataSee.length} 条标记 看过/评分 记录`}
+        header={`共 ${dataSee.length} 条记录`}
         itemLayout="horizontal"
         dataSource={dataSee}
+        style={{display: show === "see" ? "inherit" : "none"}}
         renderItem={item => (
           <li>
             <Comment
