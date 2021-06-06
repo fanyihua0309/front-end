@@ -12,6 +12,7 @@ const SignPage = ({ formTitle }) => {
     (formTitle === "登 录 账 户") ?
     (
       <main id="sign-page">
+        <h2>Meet</h2>
         <div id="sign-form">
           <h2>{formTitle}</h2>
         <Tabs type="line" defaultActiveKey="1" centered size="large">
@@ -23,6 +24,7 @@ const SignPage = ({ formTitle }) => {
           </TabPane>
         </Tabs>
         </div>
+        <h2>Movies</h2>
       </main>
     )
     :

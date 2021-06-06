@@ -3,7 +3,7 @@ import axiosInst from '../initAxios.js';
 import React, { useEffect, useState } from 'react';
 import EditModal from './EditModal.jsx';
 import SearchForm from './SearchForm.jsx';
-import { CloseOutlined, CloseCircleOutlined, CheckCircleTwoTone, HeartTwoTone, FallOutlined, RiseOutlined, ClearOutlined } from '@ant-design/icons';
+import { CloseOutlined, CloseCircleOutlined, CheckCircleTwoTone, HeartTwoTone, FallOutlined, RiseOutlined, ClearOutlined, StarOutlined } from '@ant-design/icons';
 import { useRouteMatch } from "react-router-dom";
 import '../App.less';
 
@@ -151,7 +151,8 @@ const MovieTable = ({ operation }) => {
         (record.seeTotal) ?
         (<Rate value={text} disabled allowHalf style={{zoom: "60%"}}/>)
         :
-        (<span>暂无数据</span>)
+        // (<span>暂无</span>)
+        (<StarOutlined />)
       )
     },
     {

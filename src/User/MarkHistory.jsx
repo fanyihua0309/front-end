@@ -8,6 +8,9 @@ import {
   StarTwoTone,
   CheckCircleTwoTone,
   UserOutlined,
+  SendOutlined,
+  CaretUpOutlined,
+  BankTwoTone
 } from '@ant-design/icons';
 import "../App.less";
 
@@ -49,6 +52,7 @@ const MarkHistory = ({ show, user_nickname }) => {
         <>
           <HeartTwoTone twoToneColor="red"/>
           {likeRecord[i].name} ({likeRecord[i].date}) <br />
+          <BankTwoTone />国家地区: {likeRecord[i].area} <br />
           <StarTwoTone />导演: {likeRecord[i].director} / 主演: {likeRecord[i].starring} <br />
           <TagTwoTone />{likeRecord[i].type}
         </>
@@ -72,6 +76,7 @@ const MarkHistory = ({ show, user_nickname }) => {
           <CheckCircleTwoTone twoToneColor="#52c41a" />
           {seeRecord[i].name} ({seeRecord[i].date}) <br />
           <Rate value={seeRecord[i].rate} disabled style={{zoom: "75%"}}/> <br />
+          <BankTwoTone />国家地区: {seeRecord[i].area} <br />
           <StarTwoTone />导演: {seeRecord[i].director} / 主演: {seeRecord[i].starring} <br />
           <TagTwoTone />{seeRecord[i].type}
         </>

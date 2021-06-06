@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Select, Button, Result } from 'antd';
 import { useHistory } from "react-router-dom";
 import axiosInst from '../initAxios.js'
-
+import { EditOutlined, RollbackOutlined, } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -190,10 +190,10 @@ const SignUp = () => {
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" icon={<EditOutlined />} htmlType="submit">
             注&nbsp;&nbsp;&nbsp;&nbsp;册
           </Button>
-          <Button type="primary" style={{marginLeft: "30px"}} onClick={handleClick}>
+          <Button type="primary" icon={<RollbackOutlined />} style={{marginLeft: "30px"}} onClick={handleClick}>
             返&nbsp;&nbsp;&nbsp;&nbsp;回
           </Button>
         </Form.Item>

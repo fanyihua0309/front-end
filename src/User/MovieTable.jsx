@@ -9,7 +9,8 @@ import {
   CheckCircleTwoTone,
   ClearOutlined,
   FallOutlined, 
-  RiseOutlined
+  RiseOutlined,
+  StarOutlined
 } from '@ant-design/icons';
 import '../App.less'
 
@@ -203,7 +204,8 @@ const MovieTable = ({ operation }) => {
         (record.seeTotal) ?
         (<Rate value={text} disabled allowHalf style={{zoom: "65%"}}/>)
         :
-        (<span>暂无数据</span>)
+        // (<span>暂无数据</span>)
+        (<StarOutlined />)
       ),
     },
     {
@@ -226,7 +228,7 @@ const MovieTable = ({ operation }) => {
           />
           <HeartTwoTone 
             twoToneColor={(text.like) ? "red" : "lightgrey"}
-            style={{fontSize: "150%"}}
+            style={{fontSize: "130%"}}
             onClick={() => handleToggleLike(record.id, text.like)}
           />
         </Space>
@@ -291,7 +293,7 @@ const MovieTable = ({ operation }) => {
         <Button type="primary" icon={<ClearOutlined />} shape="round" ghost style={{marginLeft: "30px"}} onClick={handleClearSelect}>重置</Button>
       </div>
 
-      <h2>电影信息列表</h2>
+      <h2 style={{marginTop: (operation === "null") ? "30px" : "inherit"}}>电影信息列表</h2>
       <Table 
         columns={columns} 
         dataSource={movies} 

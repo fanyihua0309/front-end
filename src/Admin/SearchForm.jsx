@@ -51,7 +51,7 @@ const SearchForm = ({ onClickSubmit, isVisible }) => {
           }}
         >
           <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
-            搜索
+            检索
           </Button>
           <Button
             htmlType="submit"

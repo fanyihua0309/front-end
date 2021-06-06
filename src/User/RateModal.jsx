@@ -40,7 +40,7 @@ const RateModal = ({ isSee, onClickOk, originalRate }) => {
         (
           <CheckCircleTwoTone 
             twoToneColor="#52c41a" 
-            style={{fontSize: "150%"}} 
+            style={{fontSize: "130%"}} 
             onClick={showModal}
           />
         )
@@ -48,7 +48,7 @@ const RateModal = ({ isSee, onClickOk, originalRate }) => {
         (
           <CloseCircleTwoTone 
             twoToneColor="lightgrey" 
-            style={{fontSize: "150%"}} 
+            style={{fontSize: "130%"}} 
             onClick={showModal}
           />
         )

@@ -40,13 +40,15 @@ const InputForm = ({ operation, originalMovie, onClickSubmit }) => {
     { value: '爱情' }, 
     { value: '喜剧' },
     { value: '战争' }, 
-    { value: '悬疑' },
-    { value: '科幻' },
     { value: '冒险' },
     { value: '犯罪' },
     { value: '动作' },
     { value: '灾难' },
+    { value: '奇幻' },
     { value: '动画' },
+    { value: '音乐' },
+    { value: '悬疑' },
+    { value: '科幻' },
   ]
 
   // const value = ['剧情', '爱情', '冒险'];

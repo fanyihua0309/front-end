@@ -31,9 +31,7 @@ const VerticalLayout = () => {
       <Content style={{ padding: '0 50px' }}>
         <div className="site-layout-content"><MainContent /></div>
       </Content>
-      {/* <Affix offsetBottom="0"> */}
-      <Footer style={{ textAlign: 'center' }}>Movies Web App ©2021 Created by Fan YiHua</Footer>
-      {/* </Affix> */}
+      <Footer style={{ textAlign: 'center' }}>Meet Movies Web App ©2021 Created by Fan YiHua</Footer>
     </Layout>
   )
 }

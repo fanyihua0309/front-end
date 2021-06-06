@@ -45,7 +45,7 @@ const SiderLayout = () => {
             编辑
           </Menu.Item>
           <Menu.Item key="5" icon={<SearchOutlined />} onClick={() => {return history.push("/admin/search");}}>
-            搜索
+            检索
           </Menu.Item>
           <Menu.Item key="6" icon={<StockOutlined />} onClick={() => {return history.push("/admin/sort");}}>
             排序
