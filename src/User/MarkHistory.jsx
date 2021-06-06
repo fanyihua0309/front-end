@@ -7,6 +7,7 @@ import {
   TagTwoTone,
   StarTwoTone,
   CheckCircleTwoTone,
+  UserOutlined,
 } from '@ant-design/icons';
 import "../App.less";
 
@@ -43,7 +44,7 @@ const MarkHistory = ({ show, user_nickname }) => {
   for(let i = 0; i < likeRecord.length; i++) {
     const children = {
       author: user_nickname,
-      avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F48%2F73%2F4957443ab175547.jpg&refer=http%3A%2F%2Fbpic.588ku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1625491859&t=dbd582f2b64db2feb83d85b746acca70',
+      avatar: (<UserOutlined />),
       content: (
         <>
           <HeartTwoTone twoToneColor="red"/>
@@ -65,7 +66,7 @@ const MarkHistory = ({ show, user_nickname }) => {
   for(let i = 0; i < seeRecord.length; i++) {
     const children = {
       author: user_nickname,
-      avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F48%2F73%2F4957443ab175547.jpg&refer=http%3A%2F%2Fbpic.588ku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1625491859&t=dbd582f2b64db2feb83d85b746acca70',
+      avatar: (<UserOutlined />),
       content: (
         <>
           <CheckCircleTwoTone twoToneColor="#52c41a" />

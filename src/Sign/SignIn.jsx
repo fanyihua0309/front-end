@@ -1,5 +1,5 @@
 import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axiosInst from '../initAxios.js';
@@ -82,7 +82,7 @@ const SignIn = ({ identity }) => {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button" style={{width: "100%"}}>
+        <Button type="primary" htmlType="submit" icon={<LoginOutlined />} className="login-form-button" style={{width: "100%"}}>
           登&nbsp;&nbsp;&nbsp;&nbsp;录
         </Button>
       </Form.Item>

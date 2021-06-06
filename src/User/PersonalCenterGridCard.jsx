@@ -1,9 +1,10 @@
-import { Card, Col, Row, Avatar, Descriptions, Button, Modal, Form, Input } from 'antd';
-import { EditOutlined, UserOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Avatar, Descriptions, Button, Modal, Form, Input, message } from 'antd';
+import { EditOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import axiosInst from '../initAxios.js';
 import { useState, useEffect } from "react";
 import "../App.less";
 import MarkHistory from './MarkHistory';
+import { useHistory } from "react-router-dom";
 
 
 const PersonalCenterGridCard = () => {
@@ -11,9 +12,9 @@ const PersonalCenterGridCard = () => {
   const [userInfo, setuserInfo] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setIsModal2Visible] = useState(false);
+  let history = useHistory();
 
-  const requestUserInfo = () => {
-    const user_id = localStorage.getItem("user_id");
+  const requestUserInfo = (user_id) => {
     axiosInst
       .get(`/user/info/${user_id}`)
       .then((res) => {
@@ -22,8 +23,14 @@ const PersonalCenterGridCard = () => {
   }
 
   useEffect(() => {
-    requestUserInfo();
-  }, [])
+    const user_id = localStorage.getItem("user_id");
+    // 个人中心功能必须登录后使用
+    if(!user_id) {
+      message.info("您尚未登录, 请先登录再使用!");
+      history.push("/sign/in");
+    }
+    requestUserInfo(user_id);
+  }, [history])
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -79,6 +86,11 @@ const PersonalCenterGridCard = () => {
     setIsModal2Visible(false);
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("user_nickname");
+    history.push("/sign/in");
+  }
 
   return (
     <div className="site-card-wrapper" style={{marginTop: 40}}>
@@ -99,6 +111,17 @@ const PersonalCenterGridCard = () => {
           <Card title="个人资料页" bordered={false}>
             <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
               <h2 style={{display: "inline", marginLeft: "16px"}}>{userInfo.nickname}</h2>
+              <Button 
+                icon={<LogoutOutlined />} 
+                type="primary" 
+                ghost 
+                danger 
+                shape="round"
+                style={{marginLeft: 20}}
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
               <Descriptions title="注册信息" bordered={true} layout="vertical" style={{marginTop: 40}}>
                 <Descriptions.Item label="昵称">{userInfo.nickname}</Descriptions.Item>
                 <Descriptions.Item label="手机号码">{userInfo.mobile}</Descriptions.Item>
@@ -206,7 +229,6 @@ const PersonalCenterGridCard = () => {
                   >
                     <Input.Password />
                   </Form.Item>
-
                 </Form>
               </Modal>
           </Card>
