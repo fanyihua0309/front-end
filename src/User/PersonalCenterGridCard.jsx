@@ -78,7 +78,7 @@ const PersonalCenterGridCard = () => {
 
   const handleOk2 = () => {
     axiosInst
-      .patch("/user/password", {
+      .patch("/user/info/password", {
         id: Number(localStorage.getItem("user_id")),
         password: userInfo.password,
         newPassword: userInfo.newPassword,

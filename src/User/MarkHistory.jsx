@@ -8,8 +8,6 @@ import {
   StarTwoTone,
   CheckCircleTwoTone,
   UserOutlined,
-  SendOutlined,
-  CaretUpOutlined,
   BankTwoTone
 } from '@ant-design/icons';
 import "../App.less";

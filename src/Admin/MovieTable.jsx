@@ -25,7 +25,7 @@ const MovieTable = ({ operation }) => {
    */
   const requestMoviesInfo = () => {
     axiosInst
-      .get("/admin")
+      .get("/movies")
       .then((res) => {
         let moviesList = res;
         moviesList = moviesList.map((curMovie) => {
@@ -63,9 +63,10 @@ const MovieTable = ({ operation }) => {
    * @param {object} movie 子组件抛出的存储当前用户键入的编辑之后的信息的对象
    */
   const handleEdit = (movie) => {
-    const params = JSON.stringify(movie);
     axiosInst
-      .patch("/movies/edit", { params })
+      .patch("/movies/edit", { 
+        movie: movie,
+       })
       .then(() => {
         requestMoviesInfo();
       })
@@ -76,9 +77,10 @@ const MovieTable = ({ operation }) => {
    * @param {object} movie 子组件抛出的存储当前用户键入的待搜索信息的对象
    */
   const handleSearch = (movie) => {
-    const params = JSON.stringify(movie);
     axiosInst
-      .post("/movies/search", { params })
+      .post("/movies/search", { 
+        movie: movie
+       })
       .then((res) => {
         res = res.map((curMovie) => {
           curMovie.type = curMovie.type.split(' '); 
@@ -151,7 +153,6 @@ const MovieTable = ({ operation }) => {
         (record.seeTotal) ?
         (<Rate value={text} disabled allowHalf style={{zoom: "60%"}}/>)
         :
-        // (<span>暂无</span>)
         (<StarOutlined />)
       )
     },
@@ -228,7 +229,7 @@ const MovieTable = ({ operation }) => {
 
   const handleSortAsc = () => {
     axiosInst
-      .post("/admin/sort", {
+      .post("/movies/sort", {
         orderName: selectedValue,
         type: "ASC"
       })
@@ -244,7 +245,7 @@ const MovieTable = ({ operation }) => {
 
   const handleSortDesc = () => {
     axiosInst
-      .post("/admin/sort", {
+      .post("/movies/sort", {
         orderName: selectedValue,
         type: "DESC"
       })

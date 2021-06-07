@@ -12,7 +12,7 @@ const SignIn = ({ identity }) => {
     // console.log('Received values of form: ', values);
     if(identity === "admin") {
       axiosInst
-        .post("/sign/admin", {
+        .post("/sign/in/admin", {
           "mobile": values.username,
           "password": values.password,
         })

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Space, message, Rate, Statistic, Select, Button } from 'antd';
 import axiosInst from '../initAxios.js';
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import SearchForm from "./SearchForm";
 import RateModal from "./RateModal";
 import { 
@@ -21,6 +21,7 @@ const MovieTable = ({ operation }) => {
 
   const [movies, setmovies] = useState([]);
   let history = useHistory();
+  const path = useRouteMatch();
 
   /**
    * get 请求获取所有电影信息
@@ -29,7 +30,7 @@ const MovieTable = ({ operation }) => {
     const user_id = localStorage.getItem("user_id");
 
     axiosInst
-      .get(`/movies/${user_id}`)
+      .get(`/user/${user_id}`)
       .then((res) => {
         let moviesList = res;
         moviesList = moviesList.map((curMovie) => {
@@ -45,11 +46,11 @@ const MovieTable = ({ operation }) => {
   }
 
   /**
-   * 组件挂载后，执行 requestMoviesInfo 函数
+   * path 改变，执行 requestMoviesInfo 函数
    */
   useEffect(() => {
     requestMoviesInfo();
-  }, []);
+  }, [path]);
 
   /**
    * 当用户点击喜欢/取消喜欢图标时
@@ -78,9 +79,12 @@ const MovieTable = ({ operation }) => {
    * @param {object} movie 子组件抛出的存储当前用户键入的待搜索信息的对象
    */
    const handleSearch = (movie) => {
-    const params = JSON.stringify(movie);
+    const user_id = localStorage.getItem("user_id");
     axiosInst
-      .post("/movies/search", { params })
+      .post("/user/search", { 
+        user_id: user_id,
+        movie: movie,
+      })
       .then((res) => {
         res = res.map((curMovie) => {
           curMovie.type = curMovie.type.split(' '); 
@@ -245,7 +249,7 @@ const MovieTable = ({ operation }) => {
   const handleSortAsc = () => {
     const user_id = Number(localStorage.getItem("user_id"));
     axiosInst
-      .post("/movies/sort", {
+      .post("/user/sort", {
         user_id: user_id,
         orderName: selectedValue,
         type: "ASC"
@@ -263,7 +267,7 @@ const MovieTable = ({ operation }) => {
   const handleSortDesc = () => {
     const user_id = Number(localStorage.getItem("user_id"));
     axiosInst
-      .post("/movies/sort", {
+      .post("/user/sort", {
         user_id: user_id,
         orderName: selectedValue,
         type: "DESC"
