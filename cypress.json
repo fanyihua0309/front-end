@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://localhost:3000/",
+  "env": {
+    "defaultUser": {
+      "nickname": "小范",
+      "mobile": "18106987196",
+      "email": "18106987196@163.com",
+      "password": "123456"
+    }
+  }
+}
