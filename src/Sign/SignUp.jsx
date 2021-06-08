@@ -191,10 +191,10 @@ const SignUp = () => {
 
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" icon={<EditOutlined />} htmlType="submit">
-            注&nbsp;&nbsp;&nbsp;&nbsp;册
+            注册
           </Button>
           <Button type="primary" icon={<RollbackOutlined />} style={{marginLeft: "30px"}} onClick={handleClick}>
-            返&nbsp;&nbsp;&nbsp;&nbsp;回
+            返回
           </Button>
         </Form.Item>
       </Form>

@@ -9,31 +9,20 @@ const SignIn = ({ identity }) => {
   let history = useHistory();
 
   const onFinish = (values) => {
-    // console.log('Received values of form: ', values);
-    if(identity === "admin") {
-      axiosInst
-        .post("/sign/in/admin", {
-          "mobile": values.username,
-          "password": values.password,
-        })
-        .then((res) => {
-          history.push("/admin");
-        })
-    }
-    else {
-      axiosInst
-        .post("/sign/in", {
-          "mobile": values.username,
-          "password": values.password,
-        })
-        .then((res) => {
-          // 将后端返回的 user_id 本地存储
-          console.log(res);
+    axiosInst
+      .post("/sign/in", {
+        "mobile": values.username,
+        "password": values.password,
+        "role": identity,
+      })
+      .then((res) => {
+        if(res.user_id)
           localStorage.setItem("user_id", res.user_id);
+        if(res.user_nickname)
           localStorage.setItem("user_nickname", res.user_nickname);
-          history.push("/user");
-        })
-    }
+        localStorage.setItem("accessToken", res.accessToken);
+        history.push(`/${identity}`);
+      })
   };
 
 

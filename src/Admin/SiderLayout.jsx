@@ -1,11 +1,12 @@
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Popconfirm } from 'antd';
 import {
   EyeOutlined,
   EditOutlined,
   PlusCircleOutlined,
   CloseCircleOutlined,
   SearchOutlined,
-  StockOutlined
+  StockOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -25,6 +26,11 @@ const SiderLayout = () => {
   };
 
   let history = useHistory();
+
+  const handleConfirmLogout = () => {
+    localStorage.removeItem("accessToken");
+    history.push("/sign/in");
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -50,6 +56,12 @@ const SiderLayout = () => {
           <Menu.Item key="6" icon={<StockOutlined />} onClick={() => {return history.push("/admin/sort");}}>
             排序
           </Menu.Item>
+          <Menu.Item key="7" icon={<LogoutOutlined />} >
+            <Popconfirm title="确定退出登录？" okText="确定" cancelText="取消" onConfirm={handleConfirmLogout}>
+              退出登录
+            </Popconfirm>
+          </Menu.Item>
+
         </Menu>
       </Sider>
       <Layout className="site-layout">
