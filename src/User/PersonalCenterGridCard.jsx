@@ -89,7 +89,7 @@ const PersonalCenterGridCard = () => {
   const handleLogout = () => {
     localStorage.removeItem("user_id");
     localStorage.removeItem("user_nickname");
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userToken");
     history.push("/sign/in");
   }
 

@@ -9,7 +9,7 @@ import {
 import { PlusOutlined, CheckOutlined } from '@ant-design/icons';
 import moment from "moment";
 
-// const { Option } = Select;
+const { Option } = Select;
 
 /**
  * 用户键入电影基本信息的表单组件，用于新增和编辑功能
@@ -20,6 +20,14 @@ import moment from "moment";
 const InputForm = ({ operation, originalMovie, onClickSubmit }) => {
   originalMovie = originalMovie || {};
   const [componentSize, setComponentSize] = useState('default');
+
+  const value = ['剧情', '爱情', '喜剧', '战争', '冒险', '犯罪', '动作', '灾难', '奇幻', '动画', '音乐', '悬疑', '科幻', '歌舞'];
+
+  const children = [];
+  
+  for (let i = 0; i < value.length; i++) {
+    children.push(<Option key={i + 1}>{value[i]}</Option>);
+  }
 
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -35,27 +43,6 @@ const InputForm = ({ operation, originalMovie, onClickSubmit }) => {
     onClickSubmit(values);
   };
   
-  const options = [
-    { value: '剧情' }, 
-    { value: '爱情' }, 
-    { value: '喜剧' },
-    { value: '战争' }, 
-    { value: '冒险' },
-    { value: '犯罪' },
-    { value: '动作' },
-    { value: '灾难' },
-    { value: '奇幻' },
-    { value: '动画' },
-    { value: '音乐' },
-    { value: '悬疑' },
-    { value: '科幻' },
-  ]
-
-  // const value = ['剧情', '爱情', '冒险'];
-  // const children = [];
-  // for (let i = 0; i < 3; i++) {
-  //   children.push(<Option key={i}>{value[i]}</Option>);
-  // }
 
   return (
     <>
@@ -101,7 +88,7 @@ const InputForm = ({ operation, originalMovie, onClickSubmit }) => {
           <Input />
         </Form.Item>
         <Form.Item label="类型" name="type">
-          <Select mode="tags" style={{ width: '100%' }} options={options}></Select>
+          <Select mode="tags" style={{ width: '100%' }}>{children}</Select>
         </Form.Item>
         <Form.Item>
           {/* 根据对应的功能设置按钮 */}

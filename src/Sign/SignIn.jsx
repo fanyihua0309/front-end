@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axiosInst from '../initAxios.js';
 
+
 const SignIn = ({ identity }) => {
 
   let history = useHistory();
@@ -21,6 +22,10 @@ const SignIn = ({ identity }) => {
         if(res.user_nickname)
           localStorage.setItem("user_nickname", res.user_nickname);
         localStorage.setItem("accessToken", res.accessToken);
+        (identity === 'user') ? 
+        localStorage.setItem("userToken", res.userToken) 
+        :
+        localStorage.setItem("adminToken", res.adminToken)
         history.push(`/${identity}`);
       })
   };
@@ -62,9 +67,9 @@ const SignIn = ({ identity }) => {
         />
       </Form.Item>
 
-      {/* 普通用户可以点击进行注册账户，管理员需要输入特殊字符验证身份 */}
+      {/* 普通用户可以点击进行注册账户，管理员无注册通道 */}
       <Form.Item style={{display: (identity === "user") ? "inherit" : "none"}}>
-        <Form.Item name="remember" valuePropName="checked" noStyle>
+        <Form.Item name="remember" valuePropName="unchecked" noStyle>
           <Checkbox>记住我</Checkbox>
         </Form.Item>
         <Link to="/sign/up">还没有账号？现在注册</Link>

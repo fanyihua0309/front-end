@@ -28,7 +28,7 @@ const SiderLayout = () => {
   let history = useHistory();
 
   const handleConfirmLogout = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("adminToken");
     history.push("/sign/in");
   }
 

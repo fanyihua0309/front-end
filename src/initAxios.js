@@ -2,6 +2,7 @@ import { message } from "antd";
 import axios from "axios";
 import { createHashHistory } from 'history';
 
+
 const axiosInst = axios.create({
   baseURL: "http://localhost:4000",
   timeout: 10000,
@@ -9,9 +10,13 @@ const axiosInst = axios.create({
 
 axiosInst.interceptors.request.use(
   function(request){
-    const accessToken = localStorage.getItem("accessToken");
-    if(accessToken){
-      request.headers['Authorization'] = "Bearer " + accessToken;
+    const userToken = localStorage.getItem("userToken");
+    const adminToken = localStorage.getItem("adminToken");
+    if(userToken){
+      request.headers['Authorization'] = "Bearer " + userToken;
+    }
+    if(adminToken){
+      request.headers['Authorization'] = "Bearer " + adminToken;
     }
     return request;
   },
