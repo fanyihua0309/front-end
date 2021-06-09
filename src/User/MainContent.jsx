@@ -2,7 +2,6 @@ import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import MovieTable from './MovieTable.jsx';
 import PersonalCenterGridCard from "./PersonalCenterGridCard";
 
-
 /**
  * 上中下布局的 Content 部分子组件
  */
@@ -13,7 +12,7 @@ const MainContent = () => {
   return (
     <Switch>
       <Route path={`${path}/home`}>
-        <MovieTable operation="null"/>
+        <MovieTable operation="home"/>
       </Route>
       <Route path={`${path}/search`}>
         <MovieTable operation="search"/>

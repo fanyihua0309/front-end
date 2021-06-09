@@ -10,6 +10,7 @@ const SignIn = ({ identity }) => {
   let history = useHistory();
 
   const onFinish = (values) => {
+
     axiosInst
       .post("/sign/in", {
         "mobile": values.username,
@@ -36,7 +37,7 @@ const SignIn = ({ identity }) => {
       name="normal_login"
       className="login-form"
       initialValues={{
-        remember: true,
+        remember: false,
       }}
       onFinish={onFinish}
     >
@@ -69,7 +70,7 @@ const SignIn = ({ identity }) => {
 
       {/* 普通用户可以点击进行注册账户，管理员无注册通道 */}
       <Form.Item style={{display: (identity === "user") ? "inherit" : "none"}}>
-        <Form.Item name="remember" valuePropName="unchecked" noStyle>
+        <Form.Item name="remember" valuePropName="checked" noStyle>
           <Checkbox>记住我</Checkbox>
         </Form.Item>
         <Link to="/sign/up">还没有账号？现在注册</Link>

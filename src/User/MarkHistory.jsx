@@ -1,4 +1,4 @@
-import { Comment, Tooltip, List, Rate } from 'antd';
+import { Comment, Tooltip, List, Rate, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from "react";
 import axiosInst from '../initAxios.js';
@@ -8,7 +8,8 @@ import {
   StarTwoTone,
   CheckCircleTwoTone,
   UserOutlined,
-  BankTwoTone
+  BankTwoTone,
+  CrownTwoTone
 } from '@ant-design/icons';
 import "../App.less";
 
@@ -23,7 +24,17 @@ const MarkHistory = ({ show, user_nickname }) => {
     axiosInst
       .get(`/user/mark/like/${user_id}`)
       .then((res) => {
-        setlikeRecord(res);
+        // setlikeRecord(res);
+        let moviesList = res;
+        moviesList = moviesList.map((curMovie) => {
+        // 将 type 字符串类型按空格转换为字符串数组
+        curMovie.type = curMovie.type.split(' ');  
+        // 为表格的每一行设定唯一的 key，否则会有 warning
+        curMovie.key = curMovie.id;   
+        curMovie.show = true;
+        return curMovie;
+        })
+        setlikeRecord(moviesList);
       })
   }
 
@@ -32,7 +43,16 @@ const MarkHistory = ({ show, user_nickname }) => {
     axiosInst
       .get(`/user/mark/see/${user_id}`)
       .then((res) => {
-        setseeRecord(res);
+        let moviesList = res;
+        moviesList = moviesList.map((curMovie) => {
+        // 将 type 字符串类型按空格转换为字符串数组
+        curMovie.type = curMovie.type.split(' ');  
+        // 为表格的每一行设定唯一的 key，否则会有 warning
+        curMovie.key = curMovie.id;   
+        curMovie.show = true;
+        return curMovie;
+        })
+        setseeRecord(moviesList);
       })
   }
   
@@ -50,9 +70,25 @@ const MarkHistory = ({ show, user_nickname }) => {
         <>
           <HeartTwoTone twoToneColor="red"/>
           {likeRecord[i].name} ({likeRecord[i].date}) <br />
-          <BankTwoTone />国家地区: {likeRecord[i].area} <br />
-          <StarTwoTone />导演: {likeRecord[i].director} / 主演: {likeRecord[i].starring} <br />
-          <TagTwoTone />{likeRecord[i].type}
+          <BankTwoTone /> {likeRecord[i].area} <br />
+          <CrownTwoTone /> 导演: {likeRecord[i].director} <br />
+          <StarTwoTone /> 主演: {likeRecord[i].starring} <br />
+          <TagTwoTone />
+          {
+            <>
+              {likeRecord[i].type.map(tag => {
+                let color = tag.length > 5 ? 'geekblue' : 'green';
+                if (tag === 'loser') {
+                  color = 'volcano';
+                }
+                return (
+                  <Tag color={color} key={tag}>
+                    {tag.toUpperCase()}
+                  </Tag>
+                );
+              })}
+            </>
+          }
         </>
       ),
       datetime: (
@@ -74,9 +110,25 @@ const MarkHistory = ({ show, user_nickname }) => {
           <CheckCircleTwoTone twoToneColor="#52c41a" />
           {seeRecord[i].name} ({seeRecord[i].date}) <br />
           <Rate value={seeRecord[i].rate} disabled style={{zoom: "75%"}}/> <br />
-          <BankTwoTone />国家地区: {seeRecord[i].area} <br />
-          <StarTwoTone />导演: {seeRecord[i].director} / 主演: {seeRecord[i].starring} <br />
-          <TagTwoTone />{seeRecord[i].type}
+          <BankTwoTone /> {seeRecord[i].area} <br />
+          <CrownTwoTone /> 导演: {seeRecord[i].director} <br />
+          <StarTwoTone /> 主演: {seeRecord[i].starring} <br />
+          <TagTwoTone />
+          {
+            <>
+              {seeRecord[i].type.map(tag => {
+                let color = tag.length > 5 ? 'geekblue' : 'green';
+                if (tag === 'loser') {
+                  color = 'volcano';
+                }
+                return (
+                  <Tag color={color} key={tag}>
+                    {tag.toUpperCase()}
+                  </Tag>
+                );
+              })}
+            </>
+          }
         </>
       ),
       datetime: (

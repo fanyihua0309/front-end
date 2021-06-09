@@ -1,4 +1,4 @@
-import { Card, Col, Row, Avatar, Descriptions, Button, Modal, Form, Input, message } from 'antd';
+import { Card, Col, Row, Avatar, Descriptions, Button, Modal, Form, Input, message, Popconfirm } from 'antd';
 import { EditOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import axiosInst from '../initAxios.js';
 import { useState, useEffect } from "react";
@@ -112,17 +112,19 @@ const PersonalCenterGridCard = () => {
           <Card title="个人资料页" bordered={false}>
             <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
               <h2 style={{display: "inline", marginLeft: "16px"}}>{userInfo.nickname}</h2>
-              <Button 
-                icon={<LogoutOutlined />} 
-                type="primary" 
-                ghost 
-                danger 
-                shape="round"
-                style={{marginLeft: 20}}
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
+              <Popconfirm title="确定退出登录？" okText="确定" cancelText="取消" onConfirm={handleLogout}>
+                <Button 
+                  icon={<LogoutOutlined />} 
+                  type="primary" 
+                  ghost 
+                  danger 
+                  shape="round"
+                  style={{marginLeft: 20}}
+                  // onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </Popconfirm>
               <Descriptions title="注册信息" bordered={true} layout="vertical" style={{marginTop: 40}}>
                 <Descriptions.Item label="昵称">{userInfo.nickname}</Descriptions.Item>
                 <Descriptions.Item label="手机号码">{userInfo.mobile}</Descriptions.Item>

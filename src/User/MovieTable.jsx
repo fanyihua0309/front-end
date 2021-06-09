@@ -4,13 +4,14 @@ import axiosInst from '../initAxios.js';
 import { useHistory, useRouteMatch } from "react-router-dom";
 import SearchForm from "./SearchForm";
 import RateModal from "./RateModal";
+import RecomendDrawer from './RecomendDrawer';
 import { 
   HeartTwoTone,
   CheckCircleTwoTone,
   ClearOutlined,
   FallOutlined, 
   RiseOutlined,
-  StarOutlined
+  StarOutlined,
 } from '@ant-design/icons';
 import '../App.less'
 
@@ -20,6 +21,7 @@ const { Option } = Select;
 const MovieTable = ({ operation }) => {
 
   const [movies, setmovies] = useState([]);
+  const [recomend, setrecomend] = useState([]);
   let history = useHistory();
   const path = useRouteMatch();
 
@@ -45,11 +47,29 @@ const MovieTable = ({ operation }) => {
       });
   }
 
+   const requestRecomendInfo = () => {
+    axiosInst
+      .get("/movies/recomend")
+      .then((res) => {
+        let moviesList = res;
+        moviesList = moviesList.map((curMovie) => {
+        // 将 type 字符串类型按空格转换为字符串数组
+        curMovie.type = curMovie.type.split(' ');  
+        // 为表格的每一行设定唯一的 key，否则会有 warning
+        curMovie.key = curMovie.id;   
+        curMovie.show = true;
+        return curMovie;
+        })
+        setrecomend(moviesList);
+      })
+  }
+
   /**
    * path 改变，执行 requestMoviesInfo 函数
    */
   useEffect(() => {
     requestMoviesInfo();
+    requestRecomendInfo();
   }, [path]);
 
   /**
@@ -208,7 +228,6 @@ const MovieTable = ({ operation }) => {
         (record.seeTotal) ?
         (<Rate value={text} disabled allowHalf style={{zoom: "65%"}}/>)
         :
-        // (<span>暂无数据</span>)
         (<StarOutlined />)
       ),
     },
@@ -282,6 +301,7 @@ const MovieTable = ({ operation }) => {
       })
   }
 
+
   return (
     <>
       <SearchForm onClickSubmit={handleSearch} isVisible={operation === "search" ? true : false} onClickClear={() => handleClear()}/>
@@ -297,7 +317,8 @@ const MovieTable = ({ operation }) => {
         <Button type="primary" icon={<ClearOutlined />} shape="round" ghost style={{marginLeft: "30px"}} onClick={handleClearSelect}>重置</Button>
       </div>
 
-      <h2 style={{marginTop: (operation === "null") ? "30px" : "inherit"}}>电影信息列表</h2>
+      <h2 style={{marginTop: (operation === "home") ? "30px" : "inherit"}}>电影信息列表</h2>
+      <RecomendDrawer isVisible={operation === "home" ? true : false} recomend={recomend} />
       <Table 
         columns={columns} 
         dataSource={movies} 
