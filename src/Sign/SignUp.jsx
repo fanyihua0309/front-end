@@ -156,10 +156,10 @@ const SignUp = () => {
               required: true,
               message: '请输入密码!',
             },
-            // {
-            //   min: 6,
-            //   message: '密码不能少于6位!'
-            // },
+            {
+              min: 6,
+              message: '密码不能少于6位!'
+            },
           ]}
           hasFeedback
         >
